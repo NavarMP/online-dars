@@ -36,19 +36,19 @@ export function NavigationDock() {
       }}
       animate={hidden ? "hidden" : "visible"}
       transition={{ duration: 0.35, ease: "easeInOut" }}
-      className="fixed top-xl left-0 right-0 z-50 flex justify-center px-md pointer-events-none"
+      className="fixed top-8 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none"
     >
-      <nav className="pointer-events-auto flex items-center justify-between bg-canvas-soft/80 backdrop-blur-md px-xs py-xs rounded-full shadow-sm border border-hairline w-full max-w-4xl">
+      <nav className="pointer-events-auto flex items-center justify-between bg-canvas-soft/80 backdrop-blur-md px-2 py-2 rounded-full shadow-sm border border-hairline w-full max-w-4xl">
         {/* Logo Section */}
-        <div className="flex items-center gap-xs px-sm">
-          <Link href="/" className="flex items-center gap-xs text-ink hover:opacity-80 transition-opacity">
+        <div className="flex items-center gap-2 px-3">
+          <Link href="/" className="flex items-center gap-2 text-ink hover:opacity-80 transition-opacity">
             <Image src="/logo.svg" alt="'ilm Logo" width={24} height={24} className="dark:invert" />
             <span className="text-link font-[700] hidden sm:block">علم</span>
           </Link>
         </div>
 
         {/* Center Links */}
-        <div className="hidden md:flex items-center gap-md">
+        <div className="hidden md:flex items-center gap-4">
           {[
             { href: "/courses", label: "Courses" },
             { href: "/kutub", label: "Kutub" },
@@ -68,7 +68,7 @@ export function NavigationDock() {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-xs">
+        <div className="flex items-center gap-2">
           {mounted && (
             <button 
               onClick={() => setTheme(theme === "dark" || (theme === "system" && systemTheme === "dark") ? "light" : "dark")}
@@ -84,13 +84,13 @@ export function NavigationDock() {
           )}
           <Link 
             href="/login" 
-            className="hidden sm:flex text-link text-ink hover:text-text-muted px-sm"
+            className="hidden sm:flex text-link text-ink hover:text-text-muted px-3"
           >
             Log in
           </Link>
           <Link 
             href="/signup" 
-            className="bg-primary text-on-primary text-link rounded-full px-md h-10 flex items-center justify-center hover:opacity-90 transition-opacity"
+            className="bg-primary text-on-primary text-link rounded-full px-4 h-10 flex items-center justify-center hover:opacity-90 transition-opacity"
           >
             Sign up
           </Link>

@@ -7,10 +7,10 @@ export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center">
       {/* Hero Section */}
-      <section className="flex flex-col items-center text-center w-full max-w-4xl mx-auto pt-[160px] pb-section-lg px-lg">
+      <section className="flex flex-col items-center text-center w-full max-w-4xl mx-auto pt-[160px] pb-30 px-6">
         
         {/* Animated Wordmark/Logo */}
-        <div className="mb-xl flex items-center justify-center opacity-0 animate-[fadeIn_1s_ease-out_forwards]">
+        <div className="mb-8 flex items-center justify-center opacity-0 animate-[fadeIn_1s_ease-out_forwards]">
           <Image 
             src="/dars-typo.svg" 
             alt="'ilm Arabic Typography" 
@@ -25,11 +25,11 @@ export default function Home() {
           Traditional Knowledge. Modern Access.
         </h1>
         
-        <p className="text-body-lg text-text-muted max-w-2xl mt-md">
+        <p className="text-body-lg text-text-muted max-w-2xl mt-4">
           A premium, award-worthy digital experience for accessing classical texts, structured courses, and scholarly insights from Alathurpadi Dars.
         </p>
         
-        <div className="flex items-center justify-center gap-md mt-xl pt-lg">
+        <div className="flex items-center justify-center gap-4 mt-8 pt-6">
           <Link href="/courses" className="component-button-primary hover:opacity-90 transition-opacity">
             Explore Courses
           </Link>
@@ -43,7 +43,7 @@ export default function Home() {
       <KutubSection />
 
       {/* Spacer */}
-      <div className="h-section"></div>
+      <div className="h-20"></div>
 
       {/* Instructor Section */}
       <InstructorSection />
