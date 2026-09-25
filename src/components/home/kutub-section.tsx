@@ -2,31 +2,43 @@
 
 import Link from "next/link"
 
-const FEATURED_KUTUB = [
+type Kitab = {
+  id?: string
+  title: string
+  arabic_title: string
+  category: string
+  description: string
+  is_featured?: boolean
+  highlight?: boolean
+}
+
+const FEATURED_KUTUB: Kitab[] = [
   {
     title: "Fat'h al-Mu'in",
-    arabic: "فتح المعين",
+    arabic_title: "فتح المعين",
     category: "Fiqh",
     description: "The universally accepted manual of Shafi'i jurisprudence.",
     highlight: true,
   },
   {
     title: "Tafsir al-Jalalayn",
-    arabic: "تفسير الجلالين",
+    arabic_title: "تفسير الجلالين",
     category: "Tafsir",
     description: "The classic, accessible exegesis of the Holy Qur'an.",
     highlight: false,
   },
   {
     title: "Mutafarrid",
-    arabic: "متفرد",
+    arabic_title: "متفرد",
     category: "Aqidah",
     description: "Advanced theological discussions and principles.",
     highlight: false,
   }
 ]
 
-export function KutubSection() {
+export function KutubSection({ kutub = [] }: { kutub?: Kitab[] }) {
+  const displayKutub = kutub.length > 0 ? kutub.map((k, index) => ({ ...k, highlight: index === 0 })) : FEATURED_KUTUB;
+
   return (
     <section className="py-20 px-6 w-full max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-8">
@@ -39,9 +51,9 @@ export function KutubSection() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-        {FEATURED_KUTUB.map((kitab, index) => (
+        {displayKutub.map((kitab, index) => (
           <div 
-            key={kitab.title} 
+            key={kitab.id || kitab.title} 
             className={`
               relative p-6 rounded-4 border
               ${kitab.highlight 
@@ -67,7 +79,7 @@ export function KutubSection() {
 
               <div className="mt-8">
                 <span className="text-display font-serif text-ink-soft opacity-20" dir="rtl">
-                  {kitab.arabic}
+                  {kitab.arabic_title}
                 </span>
               </div>
             </div>

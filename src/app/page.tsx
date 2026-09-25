@@ -2,8 +2,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { KutubSection } from "@/components/home/kutub-section";
 import { InstructorSection } from "@/components/home/instructor-section";
+import { createClient } from "@/lib/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+
+  // Fetch featured Kutub (limit to 3 for design)
+  const { data: featuredKutub } = await supabase
+    .from("kutub")
+    .select("*")
+    .eq("is_featured", true)
+    .limit(3);
+
+  // Fetch a primary instructor (e.g. the first one or a specific one)
+  const { data: instructor } = await supabase
+    .from("instructors")
+    .select("*")
+    .limit(1)
+    .single();
+
   return (
     <main className="min-h-screen flex flex-col items-center">
       {/* Hero Section */}
@@ -40,13 +57,13 @@ export default function Home() {
       </section>
 
       {/* Featured Kutub Section */}
-      <KutubSection />
+      <KutubSection kutub={featuredKutub || undefined} />
 
       {/* Spacer */}
       <div className="h-20"></div>
 
       {/* Instructor Section */}
-      <InstructorSection />
+      <InstructorSection instructor={instructor || undefined} />
     </main>
   );
 }

@@ -5,7 +5,14 @@ import Link from "next/link"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useRef } from "react"
 
-export function InstructorSection() {
+type Instructor = {
+  id: string
+  name: string
+  bio: string
+  image_url: string | null
+}
+
+export function InstructorSection({ instructor }: { instructor?: Instructor }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -21,15 +28,15 @@ export function InstructorSection() {
         <div className="relative aspect-[3/4] w-full max-w-md mx-auto md:ml-0 rounded-md overflow-hidden bg-canvas-soft border border-hairline-soft">
           <motion.div style={{ y }} className="absolute inset-0 scale-110">
             <Image 
-              src="/Usthad.png" 
-              alt="Usthad C K Abdurahman Faizy" 
+              src={instructor?.image_url || "/Usthad.png"} 
+              alt={instructor?.name || "Usthad C K Abdurahman Faizy"} 
               fill 
               className="object-cover grayscale" // Grayscale per Mobbin instructions
             />
           </motion.div>
           
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-32px)] text-center bg-[rgba(115,115,115,0.56)] backdrop-blur-md rounded-full py-2 px-3 text-on-primary">
-            <span className="text-label block">Usthad C K Abdurahman Faizy, Aripra</span>
+            <span className="text-label block truncate">{instructor?.name || "Usthad C K Abdurahman Faizy, Aripra"}</span>
           </div>
         </div>
 
@@ -45,12 +52,12 @@ export function InstructorSection() {
             Rooted in scholarship.
           </h2>
           
-          <p className="text-body text-text-muted mt-4 max-w-md">
-            Under the guidance of Usthad C K Abdurahman Faizy, Alathurpadi Dars has cultivated generations of scholars. His profound mastery of classical texts ensures that every course remains deeply anchored in authentic Islamic jurisprudence and theology.
+          <p className="text-body text-text-muted mt-4 max-w-md line-clamp-4">
+            {instructor?.bio || "Under the guidance of Usthad C K Abdurahman Faizy, Alathurpadi Dars has cultivated generations of scholars. His profound mastery of classical texts ensures that every course remains deeply anchored in authentic Islamic jurisprudence and theology."}
           </p>
           
           <div className="pt-6 flex items-center gap-4">
-            <Link href="/instructors/ck-abdurahman-faizy" className="bg-canvas-soft text-ink text-link rounded-full px-4 h-[48px] flex items-center justify-center hover:bg-hairline-soft transition-colors">
+            <Link href={instructor ? `/instructors/${instructor.id}` : "/instructors/ck-abdurahman-faizy"} className="bg-canvas-soft text-ink text-link rounded-full px-4 h-[48px] flex items-center justify-center hover:bg-hairline-soft transition-colors">
               View Profile ↗
             </Link>
           </div>
