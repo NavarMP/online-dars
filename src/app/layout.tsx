@@ -48,7 +48,7 @@ const vexa = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "'ilm — Online Dars Platform",
+  title: "Al-Dars — Online Dars Platform",
   description: "Traditional Knowledge. Modern Access.",
 };
 

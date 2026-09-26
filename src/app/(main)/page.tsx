@@ -30,7 +30,7 @@ export default async function Home() {
         <div className="mb-8 flex items-center justify-center opacity-0 animate-[fadeIn_1s_ease-out_forwards]">
           <Image 
             src="/dars-typo.svg" 
-            alt="'ilm Arabic Typography" 
+            alt="'Al-Dars Arabic Typography" 
             width={240} 
             height={90} 
             className="dark:invert"

@@ -42,8 +42,8 @@ export function NavigationDock() {
         {/* Logo Section */}
         <div className="flex items-center gap-2 px-3">
           <Link href="/" className="flex items-center gap-2 text-ink hover:opacity-80 transition-opacity">
-            <Image src="/logo.svg" alt="'ilm Logo" width={24} height={24} className="dark:invert" />
-            <span className="text-link font-[700] hidden sm:block">علم</span>
+            <Image src="/logo.svg" alt="Al-Dars Logo" width={24} height={24} className="dark:invert" />
+            <span className="text-link font-[700] hidden sm:block">الدرس</span>
           </Link>
         </div>
 

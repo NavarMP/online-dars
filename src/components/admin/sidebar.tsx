@@ -30,7 +30,7 @@ export function AdminSidebar() {
     <aside className="w-64 border-r border-hairline bg-canvas h-screen flex flex-col sticky top-0">
       <div className="p-6 border-b border-hairline">
         <Link href="/" className="flex items-center gap-2 text-ink">
-          <span className="font-bold tracking-tight text-title">علم Admin</span>
+          <span className="font-bold tracking-tight text-title">الدرس Admin</span>
         </Link>
       </div>
 

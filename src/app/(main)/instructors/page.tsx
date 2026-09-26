@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import Image from "next/image"
 
 export const metadata = {
-  title: "Instructors | 'ilm Online Dars",
+  title: "Instructors | Al-Dars Online Dars",
   description: "Meet the esteemed scholars and instructors at Alathurpadi Dars.",
 }
 

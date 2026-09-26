@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
 
 export const metadata = {
-  title: "Kutub Library | 'ilm Online Dars",
+  title: "Kutub Library | Al-Dars Online Dars",
   description: "Explore our collection of classical Islamic texts.",
 }
 

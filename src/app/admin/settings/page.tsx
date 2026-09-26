@@ -18,7 +18,7 @@ export default function AdminSettingsPage() {
               <label className="text-label text-ink font-[600]">Platform Name</label>
               <input 
                 type="text" 
-                defaultValue="'ilm Online Dars"
+                defaultValue="Al-Dars Online Dars"
                 className="bg-field border border-hairline rounded-sm px-3 py-2 text-body-sm outline-none focus:border-ink transition-colors"
               />
             </div>

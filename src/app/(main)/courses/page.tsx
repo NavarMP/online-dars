@@ -3,7 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 
 export const metadata = {
-  title: "Courses | 'ilm",
+  title: "Courses | Al-Dars",
   description: "Explore our collection of traditional Islamic courses.",
 }
 

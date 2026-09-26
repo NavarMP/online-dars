@@ -1,7 +1,7 @@
 import Image from "next/image"
 
 export const metadata = {
-  title: "About Us | 'ilm Online Dars",
+  title: "About Us | Al-Dars Online Dars",
   description: "Learn about the rich history and vision of Alathurpadi Dars.",
 }
 

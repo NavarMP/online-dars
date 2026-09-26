@@ -9,8 +9,8 @@ export function Footer() {
         {/* Brand Area */}
         <div className="flex flex-col gap-4 max-w-2xl">
           <div className="flex items-center gap-2">
-            <Image src="/logo.svg" alt="'ilm Logo" width={32} height={32} className="invert" />
-            <span className="text-heading-4 tracking-tight">علم</span>
+            <Image src="/logo.svg" alt="Al-Dars Logo" width={32} height={32} className="invert" />
+            <span className="text-heading-4 tracking-tight">الدرس</span>
           </div>
           <p className="text-text-faint text-body-sm">
             Traditional Knowledge. Modern Access.<br />
