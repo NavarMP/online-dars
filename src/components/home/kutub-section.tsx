@@ -12,32 +12,20 @@ type Kitab = {
   highlight?: boolean
 }
 
-const FEATURED_KUTUB: Kitab[] = [
-  {
-    title: "Fat'h al-Mu'in",
-    arabic_title: "فتح المعين",
-    category: "Fiqh",
-    description: "The universally accepted manual of Shafi'i jurisprudence.",
-    highlight: true,
-  },
-  {
-    title: "Tafsir al-Jalalayn",
-    arabic_title: "تفسير الجلالين",
-    category: "Tafsir",
-    description: "The classic, accessible exegesis of the Holy Qur'an.",
-    highlight: false,
-  },
-  {
-    title: "Mutafarrid",
-    arabic_title: "متفرد",
-    category: "Aqidah",
-    description: "Advanced theological discussions and principles.",
-    highlight: false,
-  }
-]
-
 export function KutubSection({ kutub = [] }: { kutub?: Kitab[] }) {
-  const displayKutub = kutub.length > 0 ? kutub.map((k, index) => ({ ...k, highlight: index === 0 })) : FEATURED_KUTUB;
+  const displayKutub = kutub.map((k, index) => ({ ...k, highlight: index === 0 }));
+
+  if (displayKutub.length === 0) {
+    return (
+      <section className="py-20 px-6 w-full max-w-7xl mx-auto flex flex-col items-center justify-center border border-dashed border-hairline rounded-sm bg-canvas-soft min-h-[300px]">
+        <h2 className="text-heading-3 text-text-muted mb-2">No Classical Texts Yet</h2>
+        <p className="text-body-sm text-text-muted mb-4">Add your first Kitab in the Admin Panel to see it featured here.</p>
+        <Link href="/admin/kutub/new" className="component-button-outline px-4 py-2 text-body-sm rounded-sm">
+          Add Kitab
+        </Link>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 px-6 w-full max-w-7xl mx-auto">

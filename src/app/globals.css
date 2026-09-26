@@ -98,3 +98,12 @@
   .text-label { @apply text-label font-[600] tracking-normal; }
   .text-caption { @apply text-caption font-[500] tracking-normal; }
 }
+
+@layer components {
+  .component-button-primary {
+    @apply inline-flex items-center justify-center bg-ink text-canvas font-[500] text-body-sm px-6 py-3 rounded-full hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .component-button-outline {
+    @apply inline-flex items-center justify-center bg-transparent border border-hairline text-ink font-[500] text-body-sm px-6 py-3 rounded-full hover:bg-canvas-soft transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+}

@@ -1,10 +1,24 @@
 "use client"
 
-import { useActionState } from "react"
+import { useActionState, useEffect, useState } from "react"
 import Link from "next/link"
 import { createKitab } from "@/app/actions/admin"
+import { createClient } from "@/lib/supabase/client"
 
 export default function NewKitabPage() {
+  const [categories, setCategories] = useState<{name: string}[]>([])
+  
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const supabase = createClient()
+      const { data } = await supabase.from('kutub_categories').select('name').order('name')
+      if (data) {
+        setCategories(data)
+      }
+    }
+    fetchCategories()
+  }, [])
+
   const [state, formAction, isPending] = useActionState(
     async (prevState: any, formData: FormData) => {
       const result = await createKitab(formData)
@@ -54,12 +68,21 @@ export default function NewKitabPage() {
         </div>
 
         <div className="flex flex-col gap-2">
-          <label className="text-label text-ink font-[600]" htmlFor="category">Category</label>
-          <input 
-            id="category" name="category" type="text" required 
-            className="bg-field border border-hairline rounded-sm px-3 py-2 text-body-sm outline-none focus:border-ink transition-colors"
-            placeholder="e.g. Fiqh, Aqidah, Tasawwuf"
-          />
+          <div className="flex items-center justify-between">
+            <label className="text-label text-ink font-[600]" htmlFor="category">Category</label>
+            <Link href="/admin/categories" className="text-xs text-text-muted hover:text-ink transition-colors underline">
+              Manage Categories
+            </Link>
+          </div>
+          <select 
+            id="category" name="category" required 
+            className="bg-field border border-hairline rounded-sm px-3 py-2 text-body-sm outline-none focus:border-ink transition-colors appearance-none"
+          >
+            <option value="" disabled selected>Select a category</option>
+            {categories.map((cat, i) => (
+              <option key={i} value={cat.name}>{cat.name}</option>
+            ))}
+          </select>
         </div>
 
         <div className="flex flex-col gap-2">

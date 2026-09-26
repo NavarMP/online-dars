@@ -3,8 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SmoothScrolling } from "@/components/smooth-scrolling";
-import { NavigationDock } from "@/components/navigation-dock";
-import { Footer } from "@/components/layout/footer";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,9 +29,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SmoothScrolling>
-            <NavigationDock />
             {children}
-            <Footer />
           </SmoothScrolling>
         </ThemeProvider>
       </body>
