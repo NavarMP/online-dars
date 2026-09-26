@@ -14,7 +14,8 @@
   --color-hairline: var(--hairline);
   --color-accent: var(--accent);
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), var(--font-vexa), ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: var(--font-vexa), ui-sans-serif, system-ui, sans-serif;
 
 
   --radius-none: 0px;

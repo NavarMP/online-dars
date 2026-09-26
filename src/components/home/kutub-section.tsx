@@ -66,7 +66,7 @@ export function KutubSection({ kutub = [] }: { kutub?: Kitab[] }) {
               </div>
 
               <div className="mt-8">
-                <span className="text-display font-serif text-ink-soft opacity-20" dir="rtl">
+                <span className="text-display font-arabic text-ink-soft opacity-20" dir="rtl">
                   {kitab.arabic_title}
                 </span>
               </div>

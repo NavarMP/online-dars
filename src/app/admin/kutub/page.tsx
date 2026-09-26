@@ -48,7 +48,7 @@ export default async function AdminKutubPage() {
               kutub?.map((kitab) => (
                 <tr key={kitab.id} className="border-b border-hairline last:border-0 hover:bg-canvas-soft/50 transition-colors">
                   <td className="px-6 py-4 text-body-sm font-medium text-ink">{kitab.title}</td>
-                  <td className="px-6 py-4 text-body-sm text-ink font-serif" dir="rtl">{kitab.arabic_title}</td>
+                  <td className="px-6 py-4 text-body-sm text-ink font-arabic" dir="rtl">{kitab.arabic_title}</td>
                   <td className="px-6 py-4">
                     <span className="inline-block bg-canvas-soft border border-hairline text-ink text-xs px-2 py-1 rounded-sm">
                       {kitab.category}

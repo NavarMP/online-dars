@@ -100,7 +100,7 @@ export default async function KutubPage({
                     <span className="inline-block bg-canvas-soft border border-hairline text-ink text-label px-2 py-1 rounded-sm">
                       {kitab.category}
                     </span>
-                    <span className="text-heading-3 font-serif text-ink opacity-70" dir="rtl">
+                    <span className="text-heading-3 font-arabic text-ink opacity-70" dir="rtl">
                       {kitab.arabic_title}
                     </span>
                   </div>
