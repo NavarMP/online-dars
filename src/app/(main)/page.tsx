@@ -58,13 +58,21 @@ export default async function Home() {
     .eq("section_name", "courses")
     .single()
 
+  // Fetch Stats Config from dynamic page_sections
+  const { data: statsSection } = await supabase
+    .from("page_sections")
+    .select("content")
+    .eq("page_route", "/")
+    .eq("section_name", "stats")
+    .single()
+
   return (
     <main className="min-h-screen flex flex-col w-full overflow-hidden bg-canvas">
       {/* 1. Hero Section */}
       <HeroSection videoUrl={heroVideoUrl} />
 
       {/* 2. Stats Counters */}
-      <StatsSection />
+      <StatsSection config={statsSection?.content} />
 
       {/* 3. Featured Courses Carousel */}
       {courses && courses.length > 0 && (

@@ -127,3 +127,40 @@ export async function saveCoursesConfig(formData: FormData) {
   
   return { success: true };
 }
+
+export async function saveStatsConfig(content: any) {
+  const supabase = await createClient();
+
+  const { data: existing } = await supabase
+    .from("page_sections")
+    .select("id, content")
+    .eq("page_route", "/")
+    .eq("section_name", "stats")
+    .single();
+
+  if (existing) {
+    const updatedContent = { ...(existing.content as Record<string, any>), ...content };
+    const { error } = await supabase
+      .from("page_sections")
+      .update({ content: updatedContent })
+      .eq("id", existing.id);
+      
+    if (error) return { error: error.message };
+  } else {
+    const { error } = await supabase
+      .from("page_sections")
+      .insert({
+        page_route: "/",
+        section_name: "stats",
+        content,
+        entrance_animation: "fade-up"
+      });
+      
+    if (error) return { error: error.message };
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/settings");
+  
+  return { success: true };
+}
