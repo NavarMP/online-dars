@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SmoothScrolling } from "@/components/smooth-scrolling";
+import { CursorProvider } from "@/components/animations/custom-cursor";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -67,7 +68,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <SmoothScrolling>
-            {children}
+            <CursorProvider>
+              {children}
+            </CursorProvider>
           </SmoothScrolling>
         </ThemeProvider>
       </body>
