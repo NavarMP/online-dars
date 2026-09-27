@@ -56,3 +56,25 @@ export async function createMaterial(formData: FormData) {
   revalidatePath(`/admin/courses/${course_id}`)
   return { success: true }
 }
+
+export async function updateSessionOrder(sessions: { id: string, session_order: number }[]) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: "Unauthorized" }
+
+  // Perform a batch update by calling supabase multiple times or using an upsert
+  // Since supabase-js doesn't have a native bulk update without upserting all fields, we will do a loop of updates.
+  // In a real prod app with many rows, we'd use a postgres function or upsert, but for < 100 sessions this is perfectly fine.
+  
+  for (const session of sessions) {
+    const { error } = await supabase
+      .from('course_sessions')
+      .update({ session_order: session.session_order })
+      .eq('id', session.id)
+      
+    if (error) return { error: error.message }
+  }
+
+  // We don't have the course_id here easily without fetching it, but the client will handle state.
+  return { success: true }
+}

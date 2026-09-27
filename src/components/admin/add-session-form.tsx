@@ -1,16 +1,22 @@
 "use client"
 
-import { useActionState, useRef } from "react"
+import { useActionState, useRef, useState } from "react"
 import { createSession } from "@/app/actions/course-management"
+import { VideoUploader } from "@/components/admin/media/video-uploader"
 
 export function AddSessionForm({ courseId }: { courseId: string }) {
   const formRef = useRef<HTMLFormElement>(null)
+  const [videoUrl, setVideoUrl] = useState("")
   
   const [state, formAction, isPending] = useActionState(
     async (prevState: any, formData: FormData) => {
+      if (videoUrl) {
+        formData.set("video_url", videoUrl)
+      }
       const result = await createSession(formData)
       if (result?.success) {
         formRef.current?.reset()
+        setVideoUrl("")
       }
       return result || { error: "" }
     },
@@ -43,12 +49,12 @@ export function AddSessionForm({ courseId }: { courseId: string }) {
       </div>
       
       <div className="flex flex-col gap-2">
-        <label className="text-label text-ink font-[600]" htmlFor="video_url">Video URL</label>
-        <input 
-          id="video_url" name="video_url" type="url" 
-          className="bg-field border border-hairline rounded-sm px-3 py-2 text-body-sm outline-none focus:border-ink"
-          placeholder="e.g. https://vimeo.com/..."
-        />
+        <label className="text-label text-ink font-[600]">Session Video</label>
+        <input type="hidden" name="video_url" value={videoUrl} />
+        <VideoUploader onUploadSuccess={(url) => setVideoUrl(url)} />
+        {videoUrl && (
+          <p className="text-caption text-[#10b981] font-[500] mt-1">Video attached and ready to save.</p>
+        )}
       </div>
 
       <div className="flex justify-end">

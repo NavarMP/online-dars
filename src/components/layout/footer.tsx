@@ -9,8 +9,8 @@ export function Footer() {
         {/* Brand Area */}
         <div className="flex flex-col gap-4 max-w-2xl">
           <div className="flex items-center gap-2">
-            <Image src="/logo.svg" alt="Al-Dars Logo" width={32} height={32} className="invert" />
-            <span className="text-heading-4 tracking-tight">الدرس</span>
+            <Image src="/logo.svg" alt="Suffa Logo" width={32} height={32} className="invert" />
+            <span className="text-heading-4 tracking-tight">الصفة</span>
           </div>
           <p className="text-text-faint text-body-sm">
             Traditional Knowledge. Modern Access.<br />
@@ -35,7 +35,7 @@ export function Footer() {
             <span className="text-label text-text-faint mb-2">Platform</span>
             <Link href="/courses" className="text-body-sm text-text-muted hover:text-on-primary transition-colors">Courses</Link>
             <Link href="/kutub" className="text-body-sm text-text-muted hover:text-on-primary transition-colors">Library</Link>
-            <Link href="/materials" className="text-body-sm text-text-muted hover:text-on-primary transition-colors">Study Materials</Link>
+            <Link href="/account" className="text-body-sm text-text-muted hover:text-on-primary transition-colors">My Learning</Link>
           </div>
           <div className="flex flex-col gap-3">
             <span className="text-label text-text-faint mb-2">Organization</span>

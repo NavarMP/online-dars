@@ -1,16 +1,16 @@
 import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
+import { BookOpen, Search, ArrowRight } from "lucide-react"
 
 export const metadata = {
-  title: "Kutub Library | Al-Dars Online Dars",
+  title: "Kutub Library | Suffa Online Dars",
   description: "Explore our collection of classical Islamic texts.",
 }
 
-// Next.js server components can access searchParams
 export default async function KutubPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string }>
+  searchParams: Promise<{ category?: string; q?: string }>
 }) {
   const resolvedSearchParams = await searchParams
   const supabase = await createClient()
@@ -25,27 +25,44 @@ export default async function KutubPage({
   let query = supabase.from("kutub").select("*").order("created_at", { ascending: false })
   
   const activeCategory = resolvedSearchParams?.category
-  if (activeCategory && activeCategory !== "all") {
+  const searchQuery = resolvedSearchParams?.q
+
+  if (activeCategory && activeCategory !== "All") {
     query = query.eq("category", activeCategory)
+  }
+
+  if (searchQuery) {
+    query = query.ilike("title", `%${searchQuery}%`)
   }
 
   const { data: kutub, error } = await query
 
   return (
-    <main className="min-h-screen pt-32 pb-20 px-6 max-w-7xl mx-auto flex flex-col md:flex-row gap-12">
+    <main className="min-h-screen pt-32 pb-20 px-6 max-w-[1536px] mx-auto flex flex-col lg:flex-row gap-16">
       
       {/* Sidebar Filters */}
-      <aside className="w-full md:w-64 shrink-0">
+      <aside className="w-full lg:w-64 shrink-0">
         <div className="sticky top-32">
-          <h2 className="text-body font-semibold mb-6">Categories</h2>
-          <ul className="flex flex-col gap-2">
+          {/* Search Box */}
+          <div className="mb-8 relative">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
+            <input 
+              type="text" 
+              placeholder="Search library..." 
+              className="w-full bg-canvas-soft border border-hairline-soft rounded-sm pl-9 pr-4 py-2 text-body-sm outline-none focus:border-ink transition-colors"
+              // A real implementation would use a client component for active search
+            />
+          </div>
+
+          <h2 className="text-body-sm font-[600] text-ink uppercase tracking-wider mb-4">Categories</h2>
+          <ul className="flex flex-col gap-1">
             <li>
               <Link 
-                href="/kutub" 
-                className={`text-body-sm transition-colors ${
-                  !activeCategory || activeCategory === 'all' 
-                    ? "text-ink font-medium" 
-                    : "text-text-muted hover:text-ink"
+                href={`/kutub?${new URLSearchParams({ ...resolvedSearchParams, category: "All" }).toString()}`}
+                className={`block px-3 py-2 rounded-sm text-body-sm transition-colors ${
+                  !activeCategory || activeCategory === 'All' 
+                    ? "bg-canvas-soft text-ink font-[600]" 
+                    : "text-text-muted hover:bg-canvas-soft/50 hover:text-ink"
                 }`}
               >
                 All Texts
@@ -54,11 +71,11 @@ export default async function KutubPage({
             {categories?.map((cat) => (
               <li key={cat.name}>
                 <Link 
-                  href={`/kutub?category=${encodeURIComponent(cat.name)}`}
-                  className={`text-body-sm transition-colors ${
+                  href={`/kutub?${new URLSearchParams({ ...resolvedSearchParams, category: cat.name }).toString()}`}
+                  className={`block px-3 py-2 rounded-sm text-body-sm transition-colors ${
                     activeCategory === cat.name 
-                      ? "text-ink font-medium" 
-                      : "text-text-muted hover:text-ink"
+                      ? "bg-canvas-soft text-ink font-[600]" 
+                      : "text-text-muted hover:bg-canvas-soft/50 hover:text-ink"
                   }`}
                 >
                   {cat.name}
@@ -72,11 +89,11 @@ export default async function KutubPage({
       {/* Main Content */}
       <div className="flex-1">
         <div className="mb-12">
-          <h1 className="text-display font-sans tracking-tight mb-4">
-            {activeCategory && activeCategory !== 'all' ? `${activeCategory} Texts` : 'The Library'}
+          <h1 className="text-heading-1 md:text-display font-[652] tracking-tight mb-4 text-ink">
+            {activeCategory && activeCategory !== 'All' ? `${activeCategory} Texts` : 'The Library.'}
           </h1>
-          <p className="text-body text-text-muted">
-            Browse and explore our curated collection of classical texts taught at the Dars.
+          <p className="text-body-lg text-text-muted font-[300] max-w-2xl">
+            Browse and explore our curated collection of classical texts taught at the Dars. Each text is digitized and paired with structured lessons.
           </p>
         </div>
 
@@ -85,34 +102,51 @@ export default async function KutubPage({
             Failed to load library: {error.message}
           </div>
         ) : !kutub || kutub.length === 0 ? (
-          <div className="border border-dashed border-hairline rounded-sm bg-canvas-soft py-20 flex flex-col items-center justify-center">
-            <h2 className="text-heading-3 text-text-muted mb-2">No texts found</h2>
-            <p className="text-body-sm text-text-muted">
+          <div className="border border-dashed border-hairline-soft rounded-sm bg-canvas-soft py-24 flex flex-col items-center justify-center text-center">
+            <BookOpen className="w-12 h-12 text-text-muted mb-4 opacity-50" />
+            <h2 className="text-heading-3 font-[652] text-ink mb-2">No texts found</h2>
+            <p className="text-body text-text-muted max-w-md mx-auto">
               {activeCategory ? `We couldn't find any texts in the ${activeCategory} category.` : 'The library is currently empty.'}
             </p>
+            {activeCategory && (
+              <Link href="/kutub" className="component-button-outline mt-6">
+                Clear Filters
+              </Link>
+            )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {kutub.map((kitab) => (
-              <div key={kitab.id} className="bg-canvas border border-hairline rounded-4 p-6 hover:border-ink/20 transition-colors flex flex-col justify-between h-full">
-                <div>
-                  <div className="flex justify-between items-start mb-4">
-                    <span className="inline-block bg-canvas-soft border border-hairline text-ink text-label px-2 py-1 rounded-sm">
+              <div key={kitab.id} className="group bg-canvas border border-hairline-soft hover:border-hairline hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-md p-8 transition-all duration-300 flex flex-col justify-between h-full relative overflow-hidden">
+                {/* Subtle background decoration */}
+                <div className="absolute -right-12 -top-12 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity">
+                  <span className="text-[160px] font-arabic leading-none">{kitab.arabic_title?.charAt(0) || 'ك'}</span>
+                </div>
+
+                <div className="relative z-10">
+                  <div className="flex justify-between items-start mb-6">
+                    <span className="inline-flex bg-canvas-soft border border-hairline-soft text-ink text-caption font-[600] uppercase tracking-wider px-3 py-1 rounded-full">
                       {kitab.category}
                     </span>
-                    <span className="text-heading-3 font-arabic text-ink opacity-70" dir="rtl">
-                      {kitab.arabic_title}
-                    </span>
                   </div>
-                  <h3 className="text-heading-3 mb-2">{kitab.title}</h3>
-                  <p className="text-body-sm text-text-muted line-clamp-3">
+                  
+                  <h3 className="text-heading-3 font-[652] text-ink mb-2 group-hover:text-primary transition-colors pr-8">
+                    {kitab.title}
+                  </h3>
+                  
+                  <h4 className="text-heading-4 font-arabic text-ink opacity-70 mb-4" dir="rtl">
+                    {kitab.arabic_title}
+                  </h4>
+                  
+                  <p className="text-body-sm text-text-muted font-[456] line-clamp-3">
                     {kitab.description}
                   </p>
                 </div>
                 
-                <div className="mt-8 pt-4 border-t border-hairline">
-                  <Link href={`/courses?kitab=${kitab.id}`} className="text-link text-ink hover:text-text-muted transition-colors">
-                    Find Related Courses ↗
+                <div className="mt-8 pt-6 border-t border-hairline-soft relative z-10">
+                  <Link href={`/courses?category=${encodeURIComponent(kitab.category)}`} className="inline-flex items-center gap-2 text-link text-ink hover:text-text-muted transition-colors group/link">
+                    View Related Courses
+                    <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </div>

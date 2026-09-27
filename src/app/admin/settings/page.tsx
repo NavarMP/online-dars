@@ -1,55 +1,75 @@
-"use client"
+import { createClient } from "@/lib/supabase/server";
+import { HeroVideoManager } from "./hero-video-manager";
+import { Save } from "lucide-react";
 
-export default function AdminSettingsPage() {
+export default async function AdminSettingsPage() {
+  const supabase = await createClient();
+  
+  // Fetch existing hero section
+  const { data: heroSection } = await supabase
+    .from("page_sections")
+    .select("content")
+    .eq("page_route", "/")
+    .eq("section_name", "hero")
+    .single();
+    
+  const currentVideoUrl = (heroSection?.content as any)?.videoUrl || "https://www.w3schools.com/html/mov_bbb.mp4";
+
   return (
-    <div className="flex flex-col gap-6 max-w-4xl mx-auto">
+    <div className="flex flex-col gap-12 max-w-5xl mx-auto">
       <div>
-        <h1 className="text-heading-3 mb-1">Settings</h1>
-        <p className="text-body-sm text-text-muted">Manage global platform settings and configurations.</p>
+        <h1 className="text-heading-2 font-[652] tracking-tight mb-2">Platform Settings</h1>
+        <p className="text-body-sm text-text-muted font-[456]">Manage global platform configurations and visual assets.</p>
       </div>
 
-      <div className="bg-canvas border border-hairline rounded-sm p-6 shadow-sm flex flex-col gap-6">
-        <div className="border-b border-hairline pb-4">
-          <h3 className="text-body font-semibold mb-2">Platform Details</h3>
-          <p className="text-body-sm text-text-muted mb-4">Update the general information of the platform.</p>
-          
-          <div className="grid grid-cols-1 gap-4 max-w-lg">
+      <div className="flex flex-col gap-12">
+        
+        {/* General Details (Split Layout) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="md:col-span-1">
+            <h2 className="text-heading-4 font-[652] text-ink mb-2">General Info</h2>
+            <p className="text-body-sm text-text-muted font-[456]">Update the primary details of your instance.</p>
+          </div>
+          <div className="md:col-span-2 bg-canvas border border-hairline-soft rounded-md p-8 shadow-sm flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <label className="text-label text-ink font-[600]">Platform Name</label>
+              <label className="text-caption text-text-muted font-[600] uppercase tracking-wider">Platform Name</label>
               <input 
                 type="text" 
-                defaultValue="Al-Dars Online Dars"
-                className="bg-field border border-hairline rounded-sm px-3 py-2 text-body-sm outline-none focus:border-ink transition-colors"
+                defaultValue="Suffa Online Dars"
+                className="bg-field border border-hairline-soft rounded-sm px-4 py-3 text-body-sm outline-none focus:border-ink transition-colors font-[456]"
               />
             </div>
+            
             <div className="flex flex-col gap-2">
-              <label className="text-label text-ink font-[600]">Contact Email</label>
+              <label className="text-caption text-text-muted font-[600] uppercase tracking-wider">Support Email</label>
               <input 
                 type="email" 
-                defaultValue="admin@ilm.com"
-                className="bg-field border border-hairline rounded-sm px-3 py-2 text-body-sm outline-none focus:border-ink transition-colors"
+                defaultValue="info@alathurpadidars.com"
+                className="bg-field border border-hairline-soft rounded-sm px-4 py-3 text-body-sm outline-none focus:border-ink transition-colors font-[456]"
               />
             </div>
-          </div>
-        </div>
-        
-        <div>
-          <h3 className="text-body font-semibold mb-2">Features</h3>
-          <div className="flex items-center gap-3 mt-4">
-            <input type="checkbox" id="registrations" className="w-4 h-4" defaultChecked />
-            <label htmlFor="registrations" className="text-body-sm text-ink">Allow New Student Registrations</label>
-          </div>
-          <div className="flex items-center gap-3 mt-3">
-            <input type="checkbox" id="maintenance" className="w-4 h-4" />
-            <label htmlFor="maintenance" className="text-body-sm text-ink">Enable Maintenance Mode</label>
+            
+            <div className="flex justify-end pt-4">
+              <button className="component-button-primary flex items-center gap-2">
+                <Save className="w-4 h-4" /> Save Changes
+              </button>
+            </div>
           </div>
         </div>
 
-        <div className="pt-4 flex justify-end gap-3">
-          <button className="component-button-primary px-6 py-2 h-auto text-body-sm rounded-sm">
-            Save Settings
-          </button>
+        <div className="h-px bg-hairline-soft w-full" />
+
+        {/* Hero Video Section (Split Layout) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="md:col-span-1">
+            <h2 className="text-heading-4 font-[652] text-ink mb-2">Landing Page</h2>
+            <p className="text-body-sm text-text-muted font-[456]">Manage the visual assets for the homepage hero section.</p>
+          </div>
+          <div className="md:col-span-2 bg-canvas border border-hairline-soft rounded-md p-8 shadow-sm flex flex-col gap-6">
+            <HeroVideoManager currentVideoUrl={currentVideoUrl} />
+          </div>
         </div>
+
       </div>
     </div>
   )

@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SmoothScrolling } from "@/components/smooth-scrolling";
 import { CursorProvider } from "@/components/animations/custom-cursor";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -49,8 +50,36 @@ const vexa = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Al-Dars — Online Dars Platform",
-  description: "Traditional Knowledge. Modern Access.",
+  metadataBase: new URL("https://alathurpadidars.in/"),
+  title: {
+    template: "%s | Suffa Online Dars",
+    default: "Suffa | Authentic Islamic Sciences",
+  },
+  description: "Traditional Knowledge. Modern Access. Study authentic Islamic sciences with verified Isnad from esteemed scholars.",
+  keywords: ["dars", "islamic courses", "isnad", "fiqh", "aqidah", "arabic", "traditional scholarship"],
+  authors: [{ name: "Alathurpadi Dars" }],
+  openGraph: {
+    title: "Suffa | Authentic Islamic Sciences",
+    description: "Traditional Knowledge. Modern Access. Study authentic Islamic sciences with verified Isnad.",
+    url: "https://alathurpadidars.in/",
+    siteName: "Suffa Online Dars",
+    images: [
+      {
+        url: "/og-image.jpg", // We would add an actual OG image
+        width: 1200,
+        height: 630,
+        alt: "Suffa Online Dars",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Suffa Online Dars | Authentic Islamic Sciences",
+    description: "Traditional Knowledge. Modern Access. Study authentic Islamic sciences with verified Isnad.",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({
@@ -72,6 +101,7 @@ export default function RootLayout({
               {children}
             </CursorProvider>
           </SmoothScrolling>
+          <Toaster position="bottom-right" richColors theme="system" />
         </ThemeProvider>
       </body>
     </html>

@@ -98,6 +98,9 @@
   .text-link { @apply text-link font-[600] tracking-normal; }
   .text-label { @apply text-label font-[600] tracking-normal; }
   .text-caption { @apply text-caption font-[500] tracking-normal; }
+  
+  .py-section { @apply py-16 md:py-24 lg:py-32; }
+  .py-section-lg { @apply py-24 md:py-32 lg:py-40; }
 }
 
 @layer components {

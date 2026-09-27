@@ -52,6 +52,10 @@ export function DynamicImage({
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           onLoad={() => setIsLoaded(true)}
           className={`object-cover ${fill ? "absolute inset-0 w-full h-full" : ""}`}
+          style={{ 
+            width: fill ? "100%" : "auto", 
+            height: fill ? "100%" : "auto" 
+          }}
         />
       </motion.div>
     </div>
