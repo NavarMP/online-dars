@@ -1,7 +1,15 @@
 import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
 import Image from "next/image"
-import { BookOpen, Clock, ChevronRight } from "lucide-react"
+import { BookOpen, Clock, ChevronRight, Search } from "lucide-react"
+import { Reveal } from "@/components/animations/reveal"
+import { MagneticButton } from "@/components/animations/magnetic-button"
+import { Parallax } from "@/components/animations/parallax"
+import { FilterSidebar } from "@/components/filters/filter-sidebar"
+import { SortDropdown } from "@/components/filters/sort-dropdown"
+import { ActiveFilters } from "@/components/filters/active-filters"
+import { searchParamsCache } from "@/lib/search-params"
+import { CourseCard } from "@/components/courses/course-card"
 
 export const metadata = {
   title: "Courses | Suffa",
@@ -11,12 +19,11 @@ export const metadata = {
 export default async function CoursesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; difficulty?: string; q?: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const resolvedParams = await searchParams
-  const category = resolvedParams.category
-  const difficulty = resolvedParams.difficulty
-  const query = resolvedParams.q
+  // Parse params with nuqs cache
+  const { category, difficulty, price, q, sort } = searchParamsCache.parse(resolvedParams)
 
   const supabase = await createClient()
 
@@ -24,6 +31,7 @@ export default async function CoursesPage({
   const { data: categories } = await supabase
     .from("kutub_categories")
     .select("name")
+    .neq("is_archived", true)
     .order("name")
 
   // Build the query
@@ -38,183 +46,139 @@ export default async function CoursesPage({
       thumbnail_url,
       difficulty,
       duration_minutes,
-      instructors ( name ),
-      kutub ( title, category ),
+      enrollment_count,
+      instructors!inner ( name ),
+      kutub!inner ( title, category ),
       course_sessions ( count )
     `)
     .eq("status", "published")
+    .neq("is_archived", true)
 
+  // Filtering
   if (category && category !== "All") {
-    // We need to filter by the related kutub category
-    // PostgREST syntax for filtering on related tables can be tricky. 
-    // We'll filter in JS for simplicity if the dataset is small, or use an inner join.
-    // For now, we'll fetch all and filter in JS if category is set.
+    supabaseQuery = supabaseQuery.eq("kutub.category", category)
   }
 
-  if (difficulty && difficulty !== "All") {
-    supabaseQuery = supabaseQuery.eq("difficulty", difficulty.toLowerCase())
+  if (difficulty) {
+    supabaseQuery = supabaseQuery.eq("difficulty", difficulty)
   }
 
-  if (query) {
-    supabaseQuery = supabaseQuery.ilike("title", `%${query}%`)
+  if (price === "free") {
+    supabaseQuery = supabaseQuery.eq("is_free", true)
+  } else if (price === "paid") {
+    supabaseQuery = supabaseQuery.eq("is_free", false)
   }
 
-  const { data: rawCourses } = await supabaseQuery.order("created_at", { ascending: false })
+  if (q) {
+    supabaseQuery = supabaseQuery.ilike("title", `%${q}%`)
+  }
+
+  // Sorting
+  switch (sort) {
+    case 'popular':
+      supabaseQuery = supabaseQuery.order("enrollment_count", { ascending: false })
+      break
+    case 'price_asc':
+      supabaseQuery = supabaseQuery.order("price", { ascending: true })
+      break
+    case 'price_desc':
+      supabaseQuery = supabaseQuery.order("price", { ascending: false })
+      break
+    case 'duration_asc':
+      supabaseQuery = supabaseQuery.order("duration_minutes", { ascending: true })
+      break
+    case 'duration_desc':
+      supabaseQuery = supabaseQuery.order("duration_minutes", { ascending: false })
+      break
+    case 'latest':
+    default:
+      supabaseQuery = supabaseQuery.order("created_at", { ascending: false })
+      break
+  }
+
+  const { data: rawCourses } = await supabaseQuery
   
   let courses = rawCourses || []
 
-  if (category && category !== "All") {
-    courses = courses.filter((c: any) => c.kutub?.category === category)
-  }
-
   return (
-    <main className="min-h-screen pt-32 pb-20 px-6 max-w-[1536px] mx-auto">
-      <div className="mb-12 max-w-3xl">
-        <h1 className="text-heading-1 font-[652] tracking-tight mb-4 text-ink">Course Catalog.</h1>
-        <p className="text-body-lg text-text-muted font-[300]">
-          Deepen your understanding through structured, traditional study paths guided by our esteemed scholars.
-        </p>
-      </div>
-      
-      {/* Filters Bar */}
-      <div className="flex flex-col md:flex-row gap-4 justify-between mb-12">
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          <Link 
-            href={`/courses?${new URLSearchParams({ ...resolvedParams, category: "All" }).toString()}`}
-            className={`px-4 py-2 rounded-full text-label transition-colors whitespace-nowrap ${
-              !category || category === "All" ? "bg-ink text-on-primary" : "bg-canvas-soft text-text-muted hover:text-ink"
-            }`}
-          >
-            All Categories
-          </Link>
-          {categories?.map((cat) => (
-            <Link 
-              key={cat.name}
-              href={`/courses?${new URLSearchParams({ ...resolvedParams, category: cat.name }).toString()}`}
-              className={`px-4 py-2 rounded-full text-label transition-colors whitespace-nowrap ${
-                category === cat.name ? "bg-ink text-on-primary" : "bg-canvas-soft text-text-muted hover:text-ink"
-              }`}
-            >
-              {cat.name}
-            </Link>
-          ))}
+    <main className="min-h-screen pb-20 overflow-x-hidden">
+      {/* Interactive Canvas Hero */}
+      <Parallax speed={0.5}>
+        <div className="relative w-full h-[50vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-ink">
+          {/* Abstract background mesh */}
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[70%] bg-primary rounded-full mix-blend-screen filter blur-[100px] animate-pulse" style={{ animationDuration: '8s' }} />
+            <div className="absolute top-[20%] right-[-10%] w-[40%] h-[60%] bg-accent rounded-full mix-blend-screen filter blur-[100px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
+            <div className="absolute bottom-[-20%] left-[20%] w-[60%] h-[50%] bg-purple-500 rounded-full mix-blend-screen filter blur-[100px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '4s' }} />
+          </div>
+          
+          <div className="relative z-10 text-center px-6 max-w-4xl mx-auto mt-16">
+            <Reveal animation="fade-up" duration={0.8}>
+              <h1 className="text-heading-1 md:text-display font-[652] tracking-tighter mb-6 text-on-primary">
+                Master the Sacred Sciences
+              </h1>
+            </Reveal>
+            <Reveal animation="fade-up" delay={0.2} duration={0.8}>
+              <p className="text-body-lg text-on-primary/80 font-[300] max-w-2xl mx-auto">
+                Deepen your understanding through structured, traditional study paths guided by our esteemed scholars.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </Parallax>
+
+      <div className="max-w-[1536px] mx-auto px-6 pt-12 flex flex-col lg:flex-row gap-8">
+        
+        {/* Filter Sidebar */}
+        <div className="w-full lg:w-64 shrink-0">
+          <div className="sticky top-24">
+            <FilterSidebar categories={categories || []} />
+          </div>
         </div>
 
-        <div className="flex gap-2">
-          <Link 
-            href={`/courses?${new URLSearchParams({ ...resolvedParams, difficulty: "beginner" }).toString()}`}
-            className={`px-4 py-2 rounded-full text-label transition-colors border ${
-              difficulty === "beginner" ? "bg-canvas border-ink text-ink" : "bg-canvas-soft border-hairline-soft text-text-muted hover:text-ink hover:border-hairline"
-            }`}
-          >
-            Beginner
-          </Link>
-          <Link 
-            href={`/courses?${new URLSearchParams({ ...resolvedParams, difficulty: "intermediate" }).toString()}`}
-            className={`px-4 py-2 rounded-full text-label transition-colors border ${
-              difficulty === "intermediate" ? "bg-canvas border-ink text-ink" : "bg-canvas-soft border-hairline-soft text-text-muted hover:text-ink hover:border-hairline"
-            }`}
-          >
-            Intermediate
-          </Link>
-          <Link 
-            href={`/courses?${new URLSearchParams({ ...resolvedParams, difficulty: "advanced" }).toString()}`}
-            className={`px-4 py-2 rounded-full text-label transition-colors border ${
-              difficulty === "advanced" ? "bg-canvas border-ink text-ink" : "bg-canvas-soft border-hairline-soft text-text-muted hover:text-ink hover:border-hairline"
-            }`}
-          >
-            Advanced
-          </Link>
-        </div>
-      </div>
+        {/* Main Content */}
+        <div className="flex-1">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <ActiveFilters />
+            
+            <div className="ml-auto flex items-center gap-4">
+              <SortDropdown 
+                options={[
+                  { value: 'latest', label: 'Latest Added' },
+                  { value: 'popular', label: 'Most Popular' },
+                  { value: 'price_asc', label: 'Price: Low to High' },
+                  { value: 'price_desc', label: 'Price: High to Low' },
+                  { value: 'duration_asc', label: 'Duration: Short to Long' },
+                  { value: 'duration_desc', label: 'Duration: Long to Short' },
+                ]}
+              />
+            </div>
+          </div>
 
-      {!courses || courses.length === 0 ? (
-        <div className="bg-canvas-soft border border-hairline-soft rounded-md p-24 flex flex-col items-center justify-center text-center">
-          <BookOpen className="w-12 h-12 text-text-muted mb-4 opacity-50" />
-          <h2 className="text-heading-3 mb-2 font-[652]">No courses found</h2>
-          <p className="text-body text-text-muted max-w-md mx-auto">
-            We couldn't find any courses matching your selected filters. Try clearing your filters or check back later.
-          </p>
-          {(category || difficulty || query) && (
-            <Link href="/courses" className="component-button-outline mt-6">
-              Clear Filters
-            </Link>
+          {!courses || courses.length === 0 ? (
+            <div className="bg-canvas-soft border border-hairline-soft rounded-md p-24 flex flex-col items-center justify-center text-center">
+              <BookOpen className="w-12 h-12 text-text-muted mb-4 opacity-50" />
+              <h2 className="text-heading-3 mb-2 font-[652]">No courses found</h2>
+              <p className="text-body text-text-muted max-w-md mx-auto">
+                We couldn't find any courses matching your selected filters. Try clearing your filters or check back later.
+              </p>
+              {(category !== 'All' || difficulty || q || price !== 'all') && (
+                <Link href="/courses" className="component-button-outline mt-6">
+                  Clear Filters
+                </Link>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+              {courses.map((course: any, index: number) => (
+                <Reveal key={course.id} animation="fade-up" delay={index * 0.1}>
+                  <CourseCard course={course} />
+                </Reveal>
+              ))}
+            </div>
           )}
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {courses.map((course: any) => (
-            <Link key={course.id} href={`/courses/${course.id}`} className="group flex flex-col h-full bg-canvas border border-hairline-soft hover:border-hairline rounded-md overflow-hidden transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-              {/* Thumbnail */}
-              <div className="w-full h-48 bg-canvas-soft border-b border-hairline-soft relative overflow-hidden flex items-center justify-center">
-                {course.thumbnail_url ? (
-                  <Image src={course.thumbnail_url} alt={course.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-canvas-soft to-hairline-soft opacity-50" />
-                )}
-                
-                {/* Badges */}
-                <div className="absolute top-4 left-4 flex gap-2">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-canvas/80 backdrop-blur-md text-label text-ink font-[600] border border-hairline-soft/50 shadow-sm capitalize">
-                    {course.difficulty || 'Intermediate'}
-                  </span>
-                  {course.is_free && (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full bg-accent/90 backdrop-blur-md text-label text-on-primary font-[600] shadow-sm">
-                      Free
-                    </span>
-                  )}
-                </div>
-              </div>
-              
-              <div className="p-6 flex flex-col flex-grow">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="bg-canvas-soft text-ink text-caption px-2 py-1 rounded-sm uppercase tracking-wider font-[600]">
-                    {course.kutub?.category || "General"}
-                  </span>
-                </div>
-                <h3 className="text-heading-4 font-[652] mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                  {course.title}
-                </h3>
-                <p className="text-body-sm text-text-muted line-clamp-2 mb-6 flex-grow font-[456]">
-                  {course.description}
-                </p>
-                
-                <div className="mt-auto pt-4 border-t border-hairline-soft">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex flex-col">
-                      <span className="text-caption text-text-muted mb-0.5">Instructor</span>
-                      <span className="text-label text-ink font-[600]">{course.instructors?.name || "Multiple"}</span>
-                    </div>
-                    {!course.is_free && (
-                      <div className="flex flex-col items-end">
-                        <span className="text-caption text-text-muted mb-0.5">Price</span>
-                        <span className="text-label text-ink font-[600]">${course.price}</span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 text-caption text-text-muted">
-                      <div className="flex items-center gap-1.5">
-                        <BookOpen className="w-4 h-4" />
-                        <span>{course.course_sessions?.[0]?.count || 0} Sessions</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="w-4 h-4" />
-                        <span>{Math.round((course.duration_minutes || 0) / 60)}h</span>
-                      </div>
-                    </div>
-                    
-                    <div className="w-8 h-8 rounded-full bg-canvas-soft flex items-center justify-center group-hover:bg-ink group-hover:text-on-primary transition-colors">
-                      <ChevronRight className="w-4 h-4" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+      </div>
     </main>
   )
 }

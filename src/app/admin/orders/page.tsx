@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { Search, Filter, CreditCard, Receipt } from "lucide-react"
+import { formatCurrency } from "@/lib/currency"
 
 export const metadata = {
   title: "Orders | Admin — Suffa",
@@ -105,7 +106,7 @@ export default async function AdminOrdersPage({
                     <td className="py-4 px-6">
                       <span className="text-body-sm font-[600] text-ink flex items-center gap-1.5">
                         <CreditCard className="w-4 h-4 text-text-muted" />
-                        ${order.amount}
+                        {formatCurrency(order.amount)}
                       </span>
                     </td>
                     <td className="py-4 px-6">

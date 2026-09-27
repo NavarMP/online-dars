@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
-import { BookOpen, Search, ArrowRight } from "lucide-react"
-
+import { BookOpen, ArrowRight } from "lucide-react"
+import { searchParamsCache } from "@/lib/search-params"
+import { LibrarySidebar } from "@/components/filters/library-sidebar"
+import { SortDropdown } from "@/components/filters/sort-dropdown"
 export const metadata = {
   title: "Kutub Library | Suffa Online Dars",
   description: "Explore our collection of classical Islamic texts.",
@@ -10,29 +12,51 @@ export const metadata = {
 export default async function KutubPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; q?: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const resolvedSearchParams = await searchParams
+  const { category: activeCategory, q: searchQuery, sort } = searchParamsCache.parse(resolvedSearchParams)
+  
   const supabase = await createClient()
 
   // 1. Fetch categories for the filter sidebar
   const { data: categories } = await supabase
     .from("kutub_categories")
     .select("name")
+    .neq("is_archived", true)
     .order("name")
 
   // 2. Fetch kutub based on selected category (if any)
-  let query = supabase.from("kutub").select("*").order("created_at", { ascending: false })
+  let query = supabase.from("kutub").select("*").neq("is_archived", true)
   
-  const activeCategory = resolvedSearchParams?.category
-  const searchQuery = resolvedSearchParams?.q
-
   if (activeCategory && activeCategory !== "All") {
     query = query.eq("category", activeCategory)
   }
 
   if (searchQuery) {
-    query = query.ilike("title", `%${searchQuery}%`)
+    // Search both English and Arabic titles
+    query = query.or(`title.ilike.%${searchQuery}%,arabic_title.ilike.%${searchQuery}%`)
+  }
+
+  // Sorting
+  switch (sort) {
+    case 'popular':
+    case 'price_asc':
+    case 'price_desc':
+    case 'duration_asc':
+    case 'duration_desc':
+      // Map sort options that aren't applicable to kutub to 'latest'
+      query = query.order("created_at", { ascending: false })
+      break;
+    default:
+      if (sort === 'a_z') {
+        query = query.order("title", { ascending: true })
+      } else if (sort === 'z_a') {
+        query = query.order("title", { ascending: false })
+      } else {
+        query = query.order("created_at", { ascending: false })
+      }
+      break;
   }
 
   const { data: kutub, error } = await query
@@ -42,59 +66,29 @@ export default async function KutubPage({
       
       {/* Sidebar Filters */}
       <aside className="w-full lg:w-64 shrink-0">
-        <div className="sticky top-32">
-          {/* Search Box */}
-          <div className="mb-8 relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
-            <input 
-              type="text" 
-              placeholder="Search library..." 
-              className="w-full bg-canvas-soft border border-hairline-soft rounded-sm pl-9 pr-4 py-2 text-body-sm outline-none focus:border-ink transition-colors"
-              // A real implementation would use a client component for active search
-            />
-          </div>
-
-          <h2 className="text-body-sm font-[600] text-ink uppercase tracking-wider mb-4">Categories</h2>
-          <ul className="flex flex-col gap-1">
-            <li>
-              <Link 
-                href={`/kutub?${new URLSearchParams({ ...resolvedSearchParams, category: "All" }).toString()}`}
-                className={`block px-3 py-2 rounded-sm text-body-sm transition-colors ${
-                  !activeCategory || activeCategory === 'All' 
-                    ? "bg-canvas-soft text-ink font-[600]" 
-                    : "text-text-muted hover:bg-canvas-soft/50 hover:text-ink"
-                }`}
-              >
-                All Texts
-              </Link>
-            </li>
-            {categories?.map((cat) => (
-              <li key={cat.name}>
-                <Link 
-                  href={`/kutub?${new URLSearchParams({ ...resolvedSearchParams, category: cat.name }).toString()}`}
-                  className={`block px-3 py-2 rounded-sm text-body-sm transition-colors ${
-                    activeCategory === cat.name 
-                      ? "bg-canvas-soft text-ink font-[600]" 
-                      : "text-text-muted hover:bg-canvas-soft/50 hover:text-ink"
-                  }`}
-                >
-                  {cat.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <LibrarySidebar categories={categories || []} />
       </aside>
 
       {/* Main Content */}
       <div className="flex-1">
-        <div className="mb-12">
-          <h1 className="text-heading-1 md:text-display font-[652] tracking-tight mb-4 text-ink">
-            {activeCategory && activeCategory !== 'All' ? `${activeCategory} Texts` : 'The Library.'}
-          </h1>
-          <p className="text-body-lg text-text-muted font-[300] max-w-2xl">
-            Browse and explore our curated collection of classical texts taught at the Dars. Each text is digitized and paired with structured lessons.
-          </p>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+          <div>
+            <h1 className="text-heading-1 md:text-display font-[652] tracking-tight mb-4 text-ink">
+              {activeCategory && activeCategory !== 'All' ? `${activeCategory} Texts` : 'The Library.'}
+            </h1>
+            <p className="text-body-lg text-text-muted font-[300] max-w-2xl">
+              Browse and explore our curated collection of classical texts taught at the Dars. Each text is digitized and paired with structured lessons.
+            </p>
+          </div>
+          <div className="shrink-0">
+            <SortDropdown 
+              options={[
+                { value: 'latest', label: 'Newly Added' },
+                { value: 'a_z', label: 'Alphabetical (A-Z)' },
+                { value: 'z_a', label: 'Alphabetical (Z-A)' },
+              ]}
+            />
+          </div>
         </div>
 
         {error ? (

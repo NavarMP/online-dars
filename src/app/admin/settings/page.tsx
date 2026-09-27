@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { HeroVideoManager } from "./hero-video-manager";
+import { CoursesManager } from "./courses-manager";
 import { Save } from "lucide-react";
 
 export default async function AdminSettingsPage() {
@@ -11,6 +12,14 @@ export default async function AdminSettingsPage() {
     .select("content")
     .eq("page_route", "/")
     .eq("section_name", "hero")
+    .single();
+    
+  // Fetch courses section config
+  const { data: coursesSection } = await supabase
+    .from("page_sections")
+    .select("content")
+    .eq("page_route", "/")
+    .eq("section_name", "courses")
     .single();
     
   const currentVideoUrl = (heroSection?.content as any)?.videoUrl || "https://www.w3schools.com/html/mov_bbb.mp4";
@@ -67,6 +76,19 @@ export default async function AdminSettingsPage() {
           </div>
           <div className="md:col-span-2 bg-canvas border border-hairline-soft rounded-md p-8 shadow-sm flex flex-col gap-6">
             <HeroVideoManager currentVideoUrl={currentVideoUrl} />
+          </div>
+        </div>
+
+        <div className="h-px bg-hairline-soft w-full" />
+
+        {/* Courses Section (Split Layout) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="md:col-span-1">
+            <h2 className="text-heading-4 font-[652] text-ink mb-2">Courses Section</h2>
+            <p className="text-body-sm text-text-muted font-[456]">Manage the premium presentation and animations for the featured courses on the homepage.</p>
+          </div>
+          <div className="md:col-span-2 bg-canvas border border-hairline-soft rounded-md p-8 shadow-sm flex flex-col gap-6">
+            <CoursesManager currentConfig={coursesSection?.content} />
           </div>
         </div>
 

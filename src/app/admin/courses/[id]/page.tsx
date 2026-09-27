@@ -4,7 +4,8 @@ import { notFound } from "next/navigation"
 import { AddSessionForm } from "@/components/admin/add-session-form"
 import { AddMaterialForm } from "@/components/admin/add-material-form"
 import { SessionListEditor } from "@/components/admin/session-list-editor"
-import { ChevronRight, PlayCircle, FileText, ExternalLink } from "lucide-react"
+import { ChevronRight, PlayCircle, FileText, ExternalLink, BookOpen } from "lucide-react"
+import Image from "next/image"
 
 export default async function CourseDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -130,8 +131,22 @@ export default async function CourseDetailsPage({ params }: { params: Promise<{ 
 
         {/* Sidebar Info */}
         <div className="lg:col-span-1 flex flex-col gap-6">
-          <div className="bg-canvas border border-hairline-soft rounded-md shadow-sm p-6 sticky top-24">
-            <h3 className="font-[652] text-ink mb-6 text-heading-4">Course Properties</h3>
+          <div className="bg-canvas border border-hairline-soft rounded-md shadow-sm overflow-hidden sticky top-24">
+            
+            {/* Thumbnail */}
+            <div className="w-full aspect-video bg-canvas-soft border-b border-hairline-soft relative flex items-center justify-center">
+              {course.thumbnail_url ? (
+                <Image src={course.thumbnail_url} alt={course.title} fill className="object-cover" />
+              ) : (
+                <div className="flex flex-col items-center justify-center text-text-muted opacity-50">
+                  <BookOpen className="w-8 h-8 mb-2" />
+                  <span className="text-caption font-[500]">No Thumbnail</span>
+                </div>
+              )}
+            </div>
+
+            <div className="p-6">
+              <h3 className="font-[652] text-ink mb-6 text-heading-4">Course Properties</h3>
             
             <div className="flex flex-col gap-4 text-body-sm font-[456]">
               <div className="flex items-center justify-between py-2 border-b border-hairline-soft">
@@ -161,5 +176,6 @@ export default async function CourseDetailsPage({ params }: { params: Promise<{ 
         </div>
       </div>
     </div>
+  </div>
   )
 }

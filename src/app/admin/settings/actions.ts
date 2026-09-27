@@ -76,3 +76,54 @@ export async function deleteHeroVideo(videoUrl: string) {
 
   return { success: true };
 }
+
+export async function saveCoursesConfig(formData: FormData) {
+  const supabase = await createClient();
+  
+  const title = formData.get("title") as string;
+  const subtitle = formData.get("subtitle") as string;
+  const layout = formData.get("layout") as string;
+  const backgroundStyle = formData.get("backgroundStyle") as string;
+  const animationSpeed = formData.get("animationSpeed") as string;
+  
+  const content = {
+    title,
+    subtitle,
+    layout,
+    backgroundStyle,
+    animationSpeed
+  };
+
+  const { data: existing } = await supabase
+    .from("page_sections")
+    .select("id, content")
+    .eq("page_route", "/")
+    .eq("section_name", "courses")
+    .single();
+
+  if (existing) {
+    const updatedContent = { ...(existing.content as Record<string, any>), ...content };
+    const { error } = await supabase
+      .from("page_sections")
+      .update({ content: updatedContent })
+      .eq("id", existing.id);
+      
+    if (error) return { error: error.message };
+  } else {
+    const { error } = await supabase
+      .from("page_sections")
+      .insert({
+        page_route: "/",
+        section_name: "courses",
+        content,
+        entrance_animation: "fade-up"
+      });
+      
+    if (error) return { error: error.message };
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/settings");
+  
+  return { success: true };
+}

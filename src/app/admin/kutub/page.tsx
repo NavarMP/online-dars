@@ -2,6 +2,7 @@ import Link from "next/link"
 import { createClient } from "@/lib/supabase/server"
 import { Plus, Search, Filter, Edit, BookOpen } from "lucide-react"
 import { DeleteKitabButton } from "@/components/admin/delete-kitab-button"
+import { ArchiveKitabButton } from "@/components/admin/archive-kitab-button"
 
 export default async function AdminKutubPage({
   searchParams,
@@ -87,8 +88,13 @@ export default async function AdminKutubPage({
               ) : (
                 kutub.map((kitab) => (
                   <tr key={kitab.id} className="border-b border-hairline-soft last:border-0 hover:bg-canvas-soft/40 transition-colors group">
-                    <td className="py-4 px-6 font-[600] text-ink">
+                    <td className="py-4 px-6 font-[600] text-ink flex items-center gap-2">
                       {kitab.title}
+                      {kitab.is_archived && (
+                        <span className="text-[10px] uppercase tracking-wider bg-canvas-soft border border-hairline px-1.5 py-0.5 rounded-sm text-text-muted">
+                          Archived
+                        </span>
+                      )}
                     </td>
                     <td className="py-4 px-6 text-body-lg text-ink font-arabic text-right opacity-80" dir="rtl">
                       {kitab.arabic_title}
@@ -102,6 +108,7 @@ export default async function AdminKutubPage({
                       {new Date(kitab.created_at).toLocaleDateString()}
                     </td>
                     <td className="py-4 px-6 flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <ArchiveKitabButton id={kitab.id} isArchived={kitab.is_archived === true} />
                       <Link href={`/admin/kutub/${kitab.id}/edit`} className="p-2 text-text-muted hover:text-ink hover:bg-canvas rounded-sm transition-colors" title="Edit Kitab">
                         <Edit className="w-4 h-4" />
                       </Link>

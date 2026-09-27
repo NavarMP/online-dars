@@ -9,6 +9,7 @@ type Category = {
   name: string
   description: string | null
   created_at: string
+  is_archived?: boolean
 }
 
 export default function AdminCategoriesPage() {
@@ -76,6 +77,19 @@ export default function AdminCategoriesPage() {
       
     if (error) {
       alert("Failed to delete: " + error.message)
+    } else {
+      fetchCategories()
+    }
+  }
+
+  const handleToggleArchive = async (id: string, is_archived: boolean) => {
+    const { error } = await supabase
+      .from('kutub_categories')
+      .update({ is_archived })
+      .eq('id', id)
+      
+    if (error) {
+      alert("Failed to update: " + error.message)
     } else {
       fetchCategories()
     }
@@ -174,11 +188,24 @@ export default function AdminCategoriesPage() {
             ) : (
               categories.map((cat) => (
                 <tr key={cat.id} className="border-b border-hairline last:border-0 hover:bg-canvas-soft/50 transition-colors">
-                  <td className="px-6 py-4 text-body-sm font-medium text-ink">{cat.name}</td>
+                  <td className="px-6 py-4 text-body-sm font-medium text-ink flex items-center gap-2">
+                    {cat.name}
+                    {cat.is_archived && (
+                      <span className="text-[10px] uppercase tracking-wider bg-canvas-soft border border-hairline px-1.5 py-0.5 rounded-sm text-text-muted">
+                        Archived
+                      </span>
+                    )}
+                  </td>
                   <td className="px-6 py-4 text-body-sm text-text-muted truncate max-w-[300px]">
                     {cat.description || "—"}
                   </td>
                   <td className="px-6 py-4 text-right">
+                    <button 
+                      onClick={() => handleToggleArchive(cat.id, !cat.is_archived)}
+                      className="text-body-sm text-text-muted hover:text-ink hover:underline transition-colors mr-4"
+                    >
+                      {cat.is_archived ? "Unarchive" : "Archive"}
+                    </button>
                     <button 
                       onClick={() => {
                         setEditingId(cat.id)

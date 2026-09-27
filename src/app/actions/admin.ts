@@ -215,3 +215,37 @@ export async function createInstructor(formData: FormData) {
   revalidatePath('/admin/instructors')
   redirect('/admin/instructors')
 }
+
+export async function toggleCourseArchive(id: string, is_archived: boolean) {
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: "Unauthorized" }
+
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+  if (profile?.role !== "admin") return { error: "Forbidden. You must be an admin to perform this action." }
+
+  const { error } = await supabase.from("courses").update({ is_archived }).eq('id', id)
+  if (error) return { error: error.message }
+
+  revalidatePath('/admin/courses')
+  revalidatePath('/courses')
+  return { success: true }
+}
+
+export async function toggleKitabArchive(id: string, is_archived: boolean) {
+  const supabase = await createClient()
+
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: "Unauthorized" }
+
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+  if (profile?.role !== "admin") return { error: "Forbidden. You must be an admin to perform this action." }
+
+  const { error } = await supabase.from("kutub").update({ is_archived }).eq('id', id)
+  if (error) return { error: error.message }
+
+  revalidatePath('/admin/kutub')
+  revalidatePath('/kutub')
+  return { success: true }
+}

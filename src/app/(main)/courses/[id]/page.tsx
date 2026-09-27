@@ -5,6 +5,11 @@ import Image from "next/image"
 import { EnrollButton } from "@/components/enroll-button"
 import { Clock, BookOpen, Users, Star, PlayCircle, ChevronLeft } from "lucide-react"
 import { SyllabusAccordion } from "@/components/courses/syllabus-accordion"
+import { GenerativeCover } from "@/components/courses/generative-cover"
+import { Parallax } from "@/components/animations/parallax"
+import { Reveal } from "@/components/animations/reveal"
+import { MagneticButton } from "@/components/animations/magnetic-button"
+import { formatCurrency } from "@/lib/currency"
 
 import type { Metadata, ResolvingMetadata } from "next"
 
@@ -79,38 +84,52 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
 
   return (
     <main className="min-h-screen bg-canvas pb-20">
-      {/* Hero Banner */}
-      <div className="relative w-full h-[60vh] min-h-[400px] flex items-end">
-        {course.thumbnail_url ? (
-          <Image src={course.thumbnail_url} alt={course.title} fill className="object-cover" priority />
-        ) : (
-          <div className="absolute inset-0 bg-ink" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/80 to-transparent" />
-        
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pb-12">
-          <Link href="/courses" className="inline-flex items-center gap-2 text-body-sm text-text-muted hover:text-ink transition-colors mb-6 group">
-            <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Catalog
-          </Link>
+      {/* Cinematic Hero Banner */}
+      <Parallax speed={0.65}>
+        <div className="relative w-full h-[85vh] min-h-[600px] flex items-end">
+          {course.thumbnail_url ? (
+            <Image src={course.thumbnail_url} alt={course.title} fill className="object-cover" priority />
+          ) : (
+            <GenerativeCover title={course.title} seed={course.id} />
+          )}
           
-          <div className="flex gap-2 mb-4">
-            <span className="inline-flex items-center px-3 py-1 rounded-full bg-canvas-soft border border-hairline-soft text-label text-ink capitalize">
-              {course.difficulty || 'Intermediate'}
-            </span>
-            <span className="inline-flex items-center px-3 py-1 rounded-full bg-canvas-soft border border-hairline-soft text-label text-ink uppercase tracking-wider">
-              {course.kutub?.category || 'General'}
-            </span>
+          {/* Deep cinematic gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-canvas/80 via-transparent to-transparent" />
+          
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pb-24">
+            <Reveal animation="fade-in">
+              <Link href="/courses" className="inline-flex items-center gap-2 text-body-sm text-text-muted hover:text-ink transition-colors mb-8 group bg-canvas-soft/50 backdrop-blur-md px-4 py-2 rounded-full border border-hairline-soft w-fit">
+                <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                Back to Catalog
+              </Link>
+            </Reveal>
+            
+            <Reveal animation="fade-up" delay={0.1}>
+              <div className="flex gap-2 mb-6">
+                <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-canvas/80 backdrop-blur-md border border-hairline-soft shadow-sm text-label text-ink capitalize font-[600]">
+                  {course.difficulty || 'Intermediate'}
+                </span>
+                <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-canvas/80 backdrop-blur-md border border-hairline-soft shadow-sm text-label text-ink uppercase tracking-wider font-[600]">
+                  {course.kutub?.category || 'General'}
+                </span>
+              </div>
+            </Reveal>
+            
+            <Reveal animation="fade-up" delay={0.2}>
+              <h1 className="text-heading-1 md:text-[5rem] md:leading-[1.1] font-[652] text-ink mb-6 max-w-4xl tracking-tighter drop-shadow-sm">
+                {course.title}
+              </h1>
+            </Reveal>
+            
+            <Reveal animation="fade-up" delay={0.3}>
+              <p className="text-body-lg text-text-muted font-[400] max-w-2xl line-clamp-3 text-xl leading-relaxed">
+                {course.description}
+              </p>
+            </Reveal>
           </div>
-          
-          <h1 className="text-heading-1 md:text-display font-[652] text-ink mb-4 max-w-4xl tracking-tight">
-            {course.title}
-          </h1>
-          <p className="text-body-lg text-text-muted font-[300] max-w-2xl line-clamp-3">
-            {course.description}
-          </p>
         </div>
-      </div>
+      </Parallax>
 
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8">
         {/* Main Content */}
@@ -210,41 +229,53 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
 
         {/* Sidebar / Sticky Checkout */}
         <div className="lg:col-span-1">
-          <div className="sticky top-32 bg-canvas border border-hairline-soft rounded-md p-8 shadow-sm">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="flex items-center text-[#eab308]">
-                <Star className="w-5 h-5 fill-current" />
-                <Star className="w-5 h-5 fill-current" />
-                <Star className="w-5 h-5 fill-current" />
-                <Star className="w-5 h-5 fill-current" />
-                <Star className="w-5 h-5 fill-current" />
+          <div className="sticky top-32 z-30">
+            <Reveal animation="slide-left" duration={0.6}>
+              <div className="bg-canvas/80 backdrop-blur-xl border border-hairline-soft rounded-2xl p-8 shadow-[0_20px_40px_rgb(0,0,0,0.06)] transform transition-transform hover:scale-[1.02] duration-300">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex items-center text-[#eab308]">
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                  </div>
+                  <span className="text-body-sm text-ink font-[600]">5.0</span>
+                  <span className="text-caption text-text-muted">(Reviews)</span>
+                </div>
+                
+                <div className="text-[3rem] font-[652] text-ink tracking-tighter mb-8 leading-none">
+                  {course.is_free ? "Free" : formatCurrency(course.price)}
+                </div>
+                
+                <div className="mb-8 relative z-40">
+                  <MagneticButton className="w-full">
+                    <EnrollButton courseId={course.id} isFree={course.is_free} isEnrolled={isEnrolled} />
+                  </MagneticButton>
+                </div>
+                
+                <div className="flex flex-col gap-4 pt-6 border-t border-hairline-soft/50">
+                  <div className="flex items-center gap-3 group">
+                    <div className="w-8 h-8 rounded-full bg-canvas-soft flex items-center justify-center group-hover:bg-ink group-hover:text-on-primary transition-colors">
+                      <CheckCircle className="w-4 h-4" />
+                    </div>
+                    <span className="text-body-sm text-text-muted group-hover:text-ink transition-colors">Full lifetime access</span>
+                  </div>
+                  <div className="flex items-center gap-3 group">
+                    <div className="w-8 h-8 rounded-full bg-canvas-soft flex items-center justify-center group-hover:bg-ink group-hover:text-on-primary transition-colors">
+                      <CheckCircle className="w-4 h-4" />
+                    </div>
+                    <span className="text-body-sm text-text-muted group-hover:text-ink transition-colors">Verified completion certificate</span>
+                  </div>
+                  <div className="flex items-center gap-3 group">
+                    <div className="w-8 h-8 rounded-full bg-canvas-soft flex items-center justify-center group-hover:bg-ink group-hover:text-on-primary transition-colors">
+                      <CheckCircle className="w-4 h-4" />
+                    </div>
+                    <span className="text-body-sm text-text-muted group-hover:text-ink transition-colors">Access on mobile and desktop</span>
+                  </div>
+                </div>
               </div>
-              <span className="text-body-sm text-ink font-[600]">5.0</span>
-              <span className="text-caption text-text-muted">(Reviews)</span>
-            </div>
-            
-            <div className="text-display font-[652] text-ink tracking-tight mb-6">
-              {course.is_free ? "Free" : `$${course.price}`}
-            </div>
-            
-            <div className="mb-6">
-              <EnrollButton courseId={course.id} isFree={course.is_free} isEnrolled={isEnrolled} />
-            </div>
-            
-            <div className="flex flex-col gap-3 pt-6 border-t border-hairline-soft">
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-ink" />
-                <span className="text-body-sm text-text-muted">Full lifetime access</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-ink" />
-                <span className="text-body-sm text-text-muted">Verified completion certificate</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-ink" />
-                <span className="text-body-sm text-text-muted">Access on mobile and desktop</span>
-              </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </div>

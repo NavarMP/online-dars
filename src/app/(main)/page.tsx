@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { HeroSection } from "@/components/home/hero-section"
 import { StatsSection } from "@/components/home/stats-section"
-import { CoursesCarousel } from "@/components/home/courses-carousel"
+import { PremiumCoursesSection } from "@/components/home/premium-courses"
 import { TestimonialsSection } from "@/components/home/testimonials-section"
 import { CtaSection } from "@/components/home/cta-section"
 import { KutubSection } from "@/components/home/kutub-section"
@@ -28,6 +28,7 @@ export default async function Home() {
       course_sessions(count)
     `)
     .eq("status", "published")
+    .neq("is_archived", true)
     .order("created_at", { ascending: false })
     .limit(6)
 
@@ -36,6 +37,7 @@ export default async function Home() {
     .from("kutub")
     .select("*")
     .eq("is_featured", true)
+    .neq("is_archived", true)
     .limit(4)
 
   // Fetch Hero Config from dynamic page_sections
@@ -48,6 +50,14 @@ export default async function Home() {
     
   const heroVideoUrl = (heroSection?.content as any)?.videoUrl || "https://www.w3schools.com/html/mov_bbb.mp4"
 
+  // Fetch Courses Config from dynamic page_sections
+  const { data: coursesSection } = await supabase
+    .from("page_sections")
+    .select("content")
+    .eq("page_route", "/")
+    .eq("section_name", "courses")
+    .single()
+
   return (
     <main className="min-h-screen flex flex-col w-full overflow-hidden bg-canvas">
       {/* 1. Hero Section */}
@@ -58,23 +68,11 @@ export default async function Home() {
 
       {/* 3. Featured Courses Carousel */}
       {courses && courses.length > 0 && (
-        <CoursesCarousel courses={courses} />
+        <PremiumCoursesSection courses={courses} config={coursesSection?.content as any} />
       )}
 
-      {/* 4. Immersive Library (reusing KutubSection but with Reveal) */}
-      <section className="py-section-lg border-b border-hairline-soft bg-canvas">
-        <div className="max-w-7xl mx-auto px-6 mb-12">
-          <Reveal animation="slide-right">
-            <h2 className="text-heading-2 font-[652] text-ink mb-4">The Classical Library.</h2>
-            <p className="text-body-lg text-text-muted font-[300] max-w-2xl">
-              Explore foundational texts of the Islamic tradition. From Fiqh to Arabic linguistics, our digital library preserves and presents the core syllabus of traditional study.
-            </p>
-          </Reveal>
-        </div>
-        <Reveal animation="fade-up" width="100%">
-          <KutubSection kutub={featuredKutub || undefined} />
-        </Reveal>
-      </section>
+      {/* 4. Immersive Library (Cinematic Horizontal Scroll) */}
+      <KutubSection kutub={featuredKutub || undefined} />
 
       {/* 5. Testimonials */}
       <TestimonialsSection />

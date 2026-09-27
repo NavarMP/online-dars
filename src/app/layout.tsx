@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { SmoothScrolling } from "@/components/smooth-scrolling";
 import { CursorProvider } from "@/components/animations/custom-cursor";
 import { Toaster } from "sonner";
+import { NuqsAdapter } from "nuqs/adapters/next/app"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -96,12 +97,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SmoothScrolling>
-            <CursorProvider>
-              {children}
-            </CursorProvider>
-          </SmoothScrolling>
-          <Toaster position="bottom-right" richColors theme="system" />
+          <NuqsAdapter>
+            <SmoothScrolling>
+              <CursorProvider>
+                {children}
+              </CursorProvider>
+            </SmoothScrolling>
+            <Toaster position="bottom-right" richColors theme="system" />
+          </NuqsAdapter>
         </ThemeProvider>
       </body>
     </html>

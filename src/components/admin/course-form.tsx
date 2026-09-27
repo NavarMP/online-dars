@@ -62,13 +62,25 @@ export function CourseForm({ instructors, kutub, course }: CourseFormProps) {
             />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-caption text-text-muted font-[600] uppercase tracking-wider">Course Thumbnail</label>
-            <input type="hidden" name="thumbnail_url" value={thumbnailUrl} />
-            <ImageUploader 
-              defaultImage={course?.thumbnail_url} 
-              onUploadSuccess={(url) => setThumbnailUrl(url)} 
-            />
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <label className="text-caption text-text-muted font-[600] uppercase tracking-wider">Course Thumbnail URL</label>
+              <input 
+                type="url" 
+                name="thumbnail_url" 
+                value={thumbnailUrl}
+                onChange={(e) => setThumbnailUrl(e.target.value)}
+                className="bg-field border border-hairline-soft rounded-sm px-4 py-3 text-body-sm outline-none focus:border-ink transition-colors font-[456]"
+                placeholder="https://example.com/image.jpg"
+              />
+              <span className="text-caption text-text-muted">Enter a direct image URL, or upload a file below.</span>
+            </div>
+            <div className="flex flex-col gap-2">
+              <ImageUploader 
+                defaultImage={course?.thumbnail_url} 
+                onUploadSuccess={(url) => setThumbnailUrl(url)} 
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -134,7 +146,7 @@ export function CourseForm({ instructors, kutub, course }: CourseFormProps) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-caption text-text-muted font-[600] uppercase tracking-wider" htmlFor="price">Price (USD)</label>
+              <label className="text-caption text-text-muted font-[600] uppercase tracking-wider" htmlFor="price">Price (INR)</label>
               <input 
                 id="price" name="price" type="number" step="0.01" min="0" defaultValue={course?.price || 0}
                 className="bg-field border border-hairline-soft rounded-sm px-4 py-3 text-body-sm outline-none focus:border-ink transition-colors font-[456]"

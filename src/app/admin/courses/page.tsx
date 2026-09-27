@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import Link from "next/link"
-import { Plus, Edit, Trash2, Search, Filter, MoreHorizontal, Eye } from "lucide-react"
+import Image from "next/image"
+import { Plus, Edit, Trash2, Search, Filter, MoreHorizontal, Eye, BookOpen } from "lucide-react"
+import { ArchiveCourseButton } from "@/components/admin/archive-course-button"
 
 export default async function AdminCoursesPage({
   searchParams,
@@ -58,7 +60,7 @@ export default async function AdminCoursesPage({
           <table className="w-full text-left text-body-sm whitespace-nowrap">
             <thead className="bg-canvas-soft/50 border-b border-hairline-soft text-text-muted text-caption uppercase tracking-wider font-[600]">
               <tr>
-                <th className="py-4 px-6 font-[600]">Title</th>
+                <th className="py-4 px-6 font-[600]">Course</th>
                 <th className="py-4 px-6 font-[600]">Kitab</th>
                 <th className="py-4 px-6 font-[600]">Instructor</th>
                 <th className="py-4 px-6 font-[600]">Status</th>
@@ -83,9 +85,23 @@ export default async function AdminCoursesPage({
                 courses.map((course: any) => (
                   <tr key={course.id} className="border-b border-hairline-soft last:border-0 hover:bg-canvas-soft/40 transition-colors group">
                     <td className="py-4 px-6">
-                      <Link href={`/admin/courses/${course.id}`} className="font-[600] text-ink hover:text-primary transition-colors line-clamp-1 max-w-[300px]">
-                        {course.title}
-                      </Link>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-sm bg-canvas-soft border border-hairline flex-shrink-0 flex items-center justify-center overflow-hidden relative">
+                          {course.thumbnail_url ? (
+                            <Image src={course.thumbnail_url} alt={course.title} fill className="object-cover" />
+                          ) : (
+                            <BookOpen className="w-4 h-4 text-text-muted opacity-50" />
+                          )}
+                        </div>
+                        <Link href={`/admin/courses/${course.id}`} className="font-[600] text-ink hover:text-primary transition-colors line-clamp-1 max-w-[260px] flex items-center gap-2">
+                          {course.title}
+                          {course.is_archived && (
+                            <span className="text-[10px] uppercase tracking-wider bg-canvas-soft border border-hairline px-1.5 py-0.5 rounded-sm text-text-muted">
+                              Archived
+                            </span>
+                          )}
+                        </Link>
+                      </div>
                     </td>
                     <td className="py-4 px-6 text-text-muted font-[456]">
                       <span className="line-clamp-1 max-w-[200px]">{course.kutub?.title || "—"}</span>
@@ -108,6 +124,7 @@ export default async function AdminCoursesPage({
                       )}
                     </td>
                     <td className="py-4 px-6 flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <ArchiveCourseButton id={course.id} isArchived={course.is_archived === true} />
                       <Link href={`/courses/${course.id}`} target="_blank" className="p-2 text-text-muted hover:text-ink hover:bg-canvas rounded-sm transition-colors" title="View Public Page">
                         <Eye className="w-4 h-4" />
                       </Link>

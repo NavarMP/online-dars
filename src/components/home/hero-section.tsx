@@ -31,7 +31,7 @@ export function HeroSection({ videoUrl }: { videoUrl: string }) {
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-ink text-on-primary pt-16"
+      className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-[#141414] text-white pt-16"
     >
       {/* Parallax Video Background */}
       <motion.div 
@@ -48,7 +48,7 @@ export function HeroSection({ videoUrl }: { videoUrl: string }) {
           <source src={videoUrl} type="video/mp4" />
         </video>
         {/* Subtle gradient overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-transparent" />
       </motion.div>
 
       {/* Content */}
@@ -75,10 +75,10 @@ export function HeroSection({ videoUrl }: { videoUrl: string }) {
           initial="hidden"
           animate="visible"
           variants={textVariants}
-          className="text-heading-1 md:text-display tracking-tight text-on-primary mb-6 max-w-4xl font-[652]"
+          className="text-heading-1 md:text-display tracking-tight text-white mb-6 max-w-4xl font-[652]"
         >
           Traditional Knowledge.<br />
-          <span className="text-on-primary/60">Modern Access.</span>
+          <span className="text-white/60">Modern Access.</span>
         </motion.h1>
         
         <motion.p
@@ -86,7 +86,7 @@ export function HeroSection({ videoUrl }: { videoUrl: string }) {
           initial="hidden"
           animate="visible"
           variants={textVariants}
-          className="text-body-lg text-on-primary/70 max-w-2xl mb-12 font-[300]"
+          className="text-body-lg text-white/70 max-w-2xl mb-12 font-[300]"
         >
           A premium, award-worthy digital experience for accessing classical texts, structured courses, and scholarly insights from Alathurpadi Dars.
         </motion.p>
@@ -98,10 +98,10 @@ export function HeroSection({ videoUrl }: { videoUrl: string }) {
           variants={textVariants}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Link href="/courses" className="px-8 py-4 rounded-full bg-on-primary text-ink text-link font-[600] hover:bg-canvas-soft transition-colors w-full sm:w-auto">
+          <Link href="/courses" className="px-8 py-4 rounded-full bg-white text-[#141414] text-link font-[600] hover:bg-gray-100 transition-colors w-full sm:w-auto">
             Explore Courses
           </Link>
-          <Link href="/about" className="px-8 py-4 rounded-full border border-hairline-soft/30 text-on-primary text-link font-[600] hover:bg-on-primary/10 transition-colors w-full sm:w-auto">
+          <Link href="/about" className="px-8 py-4 rounded-full border border-white/30 text-white text-link font-[600] hover:bg-white/10 transition-colors w-full sm:w-auto">
             About the Dars
           </Link>
         </motion.div>
@@ -114,12 +114,12 @@ export function HeroSection({ videoUrl }: { videoUrl: string }) {
         transition={{ delay: 1.5, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="text-caption text-on-primary/50 tracking-widest uppercase">Scroll</span>
-        <div className="w-[1px] h-12 bg-on-primary/20 overflow-hidden">
+        <span className="text-caption text-white/50 tracking-widest uppercase">Scroll</span>
+        <div className="w-[1px] h-12 bg-white/20 overflow-hidden">
           <motion.div 
             animate={{ y: ["-100%", "100%"] }}
             transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-            className="w-full h-1/2 bg-on-primary"
+            className="w-full h-1/2 bg-white"
           />
         </div>
       </motion.div>
