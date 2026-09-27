@@ -117,7 +117,7 @@ export function CoursesCarousel({ courses }: { courses: any[] }) {
                         </div>
                       </div>
                       
-                      <div className="w-8 h-8 rounded-full bg-canvas-soft flex items-center justify-center group-hover:bg-ink group-hover:text-on-primary transition-colors">
+                      <div className="w-8 h-8 rounded-full bg-canvas-soft flex items-center justify-center group-hover:bg-ink group-hover:text-canvas transition-colors">
                         <ChevronRight className="w-4 h-4" />
                       </div>
                     </div>

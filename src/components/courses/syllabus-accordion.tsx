@@ -27,7 +27,7 @@ export function SyllabusAccordion({ sessions }: { sessions: any[] }) {
             >
               <div className="flex items-center gap-4">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-label shrink-0 transition-colors ${
-                  isOpen ? "bg-ink text-on-primary" : "bg-canvas-soft text-text-muted"
+                  isOpen ? "bg-ink text-canvas" : "bg-canvas-soft text-text-muted"
                 }`}>
                   {index + 1}
                 </div>

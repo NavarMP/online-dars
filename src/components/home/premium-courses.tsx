@@ -65,7 +65,7 @@ export function PremiumCoursesSection({ courses, config }: PremiumCoursesSection
   // Dynamic styles
   let sectionClasses = "w-full py-section-lg overflow-hidden transition-colors duration-1000 relative ";
   if (bgStyle === "canvas") sectionClasses += "bg-canvas-soft";
-  if (bgStyle === "dark-premium") sectionClasses += "bg-[#0A0A0A] text-white";
+  if (bgStyle === "dark-premium") sectionClasses += "bg-zinc-950 text-white";
   if (bgStyle === "gradient-glow") sectionClasses += "bg-gradient-to-br from-canvas-soft via-canvas to-primary/5";
   if (bgStyle === "glassmorphism") sectionClasses += "bg-canvas-soft/80 backdrop-blur-2xl";
 
@@ -215,7 +215,7 @@ function CourseCard({ course, isDark, isPremium }: { course: any, isDark: boolea
     <Link href={`/courses/${course.id}`} className="group block h-full outline-none">
       <div className={`h-full flex flex-col rounded-2xl overflow-hidden transition-all duration-500 
         ${isDark 
-          ? 'bg-[#111] border border-white/10 hover:border-white/20 hover:shadow-[0_0_40px_rgba(255,255,255,0.05)]' 
+          ? 'bg-zinc-900 border border-white/10 hover:border-white/20 hover:shadow-[0_0_40px_rgba(255,255,255,0.05)]' 
           : 'bg-canvas border border-hairline-soft hover:border-hairline hover:shadow-[0_20px_40px_rgb(0,0,0,0.06)]'}
       `}>
         
@@ -229,7 +229,7 @@ function CourseCard({ course, isDark, isPremium }: { course: any, isDark: boolea
               className={`object-cover transition-transform duration-1000 ${isPremium ? 'group-hover:scale-110 group-hover:rotate-1' : 'group-hover:scale-105'}`} 
             />
           ) : (
-            <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-[#222] to-[#111]' : 'from-canvas-soft to-hairline-soft'} opacity-80`} />
+            <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-zinc-800 to-zinc-900' : 'from-canvas-soft to-hairline-soft'} opacity-80`} />
           )}
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -273,7 +273,7 @@ function CourseCard({ course, isDark, isPremium }: { course: any, isDark: boolea
             </div>
             
             <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110
-              ${isDark ? 'bg-white/5 text-white group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_0_20px_rgba(var(--color-primary),0.5)]' : 'bg-canvas-soft text-ink group-hover:bg-ink group-hover:text-white'}
+              ${isDark ? 'bg-white/5 text-white group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_0_20px_rgba(var(--color-primary),0.5)]' : 'bg-canvas-soft text-ink group-hover:bg-ink group-hover:text-canvas'}
             `}>
               <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-0.5" />
             </div>
@@ -289,7 +289,7 @@ function CourseCardHorizontal({ course, isDark }: { course: any, isDark: boolean
     <Link href={`/courses/${course.id}`} className="group block w-full outline-none">
       <div className={`flex flex-col md:flex-row rounded-2xl overflow-hidden transition-all duration-500 
         ${isDark 
-          ? 'bg-[#111] border border-white/10 hover:border-white/20' 
+          ? 'bg-zinc-900 border border-white/10 hover:border-white/20' 
           : 'bg-canvas border border-hairline-soft hover:border-hairline hover:shadow-lg'}
       `}>
         <div className="w-full md:w-1/3 h-48 md:h-auto relative overflow-hidden">
@@ -301,7 +301,7 @@ function CourseCardHorizontal({ course, isDark }: { course: any, isDark: boolean
               className="object-cover transition-transform duration-700 group-hover:scale-105" 
             />
           ) : (
-            <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-[#222] to-[#111]' : 'from-canvas-soft to-hairline-soft'} opacity-80`} />
+            <div className={`absolute inset-0 bg-gradient-to-br ${isDark ? 'from-zinc-800 to-zinc-900' : 'from-canvas-soft to-hairline-soft'} opacity-80`} />
           )}
         </div>
         <div className="p-6 md:p-8 flex flex-col justify-center flex-grow">

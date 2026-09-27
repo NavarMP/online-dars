@@ -118,7 +118,7 @@ export function CourseCard({ course }: { course: any }) {
               </div>
             </div>
             
-            <div className="w-8 h-8 rounded-full bg-canvas border border-hairline-soft flex items-center justify-center group-hover:bg-ink group-hover:border-ink group-hover:text-on-primary transition-all duration-300">
+            <div className="w-8 h-8 rounded-full bg-canvas border border-hairline-soft flex items-center justify-center group-hover:bg-ink group-hover:border-ink group-hover:text-canvas transition-all duration-300">
               <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
             </div>
           </div>

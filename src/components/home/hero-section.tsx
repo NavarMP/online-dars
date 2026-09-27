@@ -31,7 +31,7 @@ export function HeroSection({ videoUrl }: { videoUrl: string }) {
   return (
     <section 
       ref={containerRef} 
-      className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-[#141414] text-white pt-16"
+      className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-zinc-950 text-white pt-16"
     >
       {/* Parallax Video Background */}
       <motion.div 
@@ -48,7 +48,7 @@ export function HeroSection({ videoUrl }: { videoUrl: string }) {
           <source src={videoUrl} type="video/mp4" />
         </video>
         {/* Subtle gradient overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#141414] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent" />
       </motion.div>
 
       {/* Content */}
@@ -98,7 +98,7 @@ export function HeroSection({ videoUrl }: { videoUrl: string }) {
           variants={textVariants}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Link href="/courses" className="px-8 py-4 rounded-full bg-white text-[#141414] text-link font-[600] hover:bg-gray-100 transition-colors w-full sm:w-auto">
+          <Link href="/courses" className="px-8 py-4 rounded-full bg-white text-zinc-950 text-link font-[600] hover:bg-zinc-100 transition-colors w-full sm:w-auto">
             Explore Courses
           </Link>
           <Link href="/about" className="px-8 py-4 rounded-full border border-white/30 text-white text-link font-[600] hover:bg-white/10 transition-colors w-full sm:w-auto">

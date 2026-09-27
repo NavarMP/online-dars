@@ -51,37 +51,39 @@
 
 @layer base {
   :root {
-    --primary: #141414;
+    /* Premium Light Theme - Soft off-whites and Zinc grays */
+    --primary: #2563eb;       /* High-energy electric blue */
     --on-primary: #ffffff;
-    --ink: #141414;
-    --ink-soft: #262626;
-    --text-muted: #707070;
-    --text-faint: #adadad;
-    --canvas: #ffffff;
-    --canvas-soft: #f3f3f3;
-    --field: #f0f0f0;
-    --hairline-soft: #f0f0f0;
-    --hairline: #e0e0e0;
-    --accent: #0066ff;
+    --ink: #09090b;           /* Softer than pure black */
+    --ink-soft: #27272a;      /* High contrast for sub-text */
+    --text-muted: #52525b;    /* WCAG AA compliant muted text */
+    --text-faint: #a1a1aa;    
+    --canvas: #fafafa;        /* Soft off-white to reduce eye strain */
+    --canvas-soft: #f4f4f5;   
+    --field: #f4f4f5;
+    --hairline-soft: #f4f4f5;
+    --hairline: #e4e4e7;
+    --accent: #3b82f6;        /* Bright dopamine accent */
   }
 
   .dark {
-    --primary: #f0f0f0;
-    --on-primary: #141414;
-    --ink: #f0f0f0;
-    --ink-soft: #d4d4d4;
-    --text-muted: #a3a3a3;
-    --text-faint: #525252;
-    --canvas: #141414;
-    --canvas-soft: #1f1f1f;
-    --field: #262626;
-    --hairline-soft: #262626;
-    --hairline: #404040;
-    --accent: #0066ff;
+    /* Premium Dark Theme - Deep Zinc charcoals */
+    --primary: #3b82f6;
+    --on-primary: #ffffff;
+    --ink: #fafafa;
+    --ink-soft: #e4e4e7;
+    --text-muted: #a1a1aa;
+    --text-faint: #52525b;
+    --canvas: #09090b;        /* Deep charcoal, not pure black */
+    --canvas-soft: #18181b;
+    --field: #27272a;
+    --hairline-soft: #27272a;
+    --hairline: #3f3f46;
+    --accent: #60a5fa;
   }
 
   body {
-    @apply bg-canvas text-ink font-sans antialiased;
+    @apply bg-canvas text-ink font-sans antialiased transition-colors duration-300 ease-in-out;
   }
 }
 

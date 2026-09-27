@@ -125,7 +125,7 @@ export function FilterSidebar({ categories }: { categories: Category[] }) {
                 onClick={() => setDifficulty(difficulty === lvl ? null : lvl as any)}
                 className={`px-3 py-1.5 rounded-full text-xs font-[500] capitalize transition-all border ${
                   difficulty === lvl 
-                    ? "bg-ink border-ink text-on-primary" 
+                    ? "bg-ink border-ink text-canvas" 
                     : "bg-transparent border-hairline-soft text-text-muted hover:border-ink hover:text-ink"
                 }`}
               >

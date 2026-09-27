@@ -40,7 +40,7 @@ export function CtaSection() {
           transition={{ delay: 0.2 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Link href="/signup" className="px-8 py-4 rounded-full bg-ink text-on-primary text-link font-[600] hover:bg-ink-soft transition-colors w-full sm:w-auto flex items-center justify-center gap-2 group">
+          <Link href="/signup" className="px-8 py-4 rounded-full bg-ink text-canvas text-link font-[600] hover:bg-ink-soft transition-colors w-full sm:w-auto flex items-center justify-center gap-2 group">
             Start Learning
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>

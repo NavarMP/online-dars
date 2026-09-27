@@ -21,28 +21,28 @@ export function ActiveFilters() {
       {q && (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-canvas-soft border border-hairline-soft rounded-full text-xs font-[500] text-ink">
           Search: {q}
-          <button onClick={() => setQ(null)} className="hover:text-[#ef4444] transition-colors"><X className="w-3 h-3" /></button>
+          <button onClick={() => setQ(null)} className="hover:text-red-500 transition-colors"><X className="w-3 h-3" /></button>
         </span>
       )}
 
       {category !== 'All' && (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-canvas-soft border border-hairline-soft rounded-full text-xs font-[500] text-ink">
           Category: {category}
-          <button onClick={() => setCategory('All')} className="hover:text-[#ef4444] transition-colors"><X className="w-3 h-3" /></button>
+          <button onClick={() => setCategory('All')} className="hover:text-red-500 transition-colors"><X className="w-3 h-3" /></button>
         </span>
       )}
 
       {difficulty && (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-canvas-soft border border-hairline-soft rounded-full text-xs font-[500] text-ink capitalize">
           Difficulty: {difficulty}
-          <button onClick={() => setDifficulty(null)} className="hover:text-[#ef4444] transition-colors"><X className="w-3 h-3" /></button>
+          <button onClick={() => setDifficulty(null)} className="hover:text-red-500 transition-colors"><X className="w-3 h-3" /></button>
         </span>
       )}
 
       {price !== 'all' && (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-canvas-soft border border-hairline-soft rounded-full text-xs font-[500] text-ink capitalize">
           Price: {price}
-          <button onClick={() => setPrice('all')} className="hover:text-[#ef4444] transition-colors"><X className="w-3 h-3" /></button>
+          <button onClick={() => setPrice('all')} className="hover:text-red-500 transition-colors"><X className="w-3 h-3" /></button>
         </span>
       )}
 

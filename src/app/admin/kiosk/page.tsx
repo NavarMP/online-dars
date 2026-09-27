@@ -2,7 +2,7 @@ import MagneticButton from "./components/MagneticButton";
 
 export default function KioskPage() {
   // Fetch the web URL from environment variables, fallback to '/' if not found
-  const launchUrl = process.env.NEXT_PUBLIC_WEB_URL || "/";
+  const launchUrl = process.env.NEXT_PUBLIC_WEB_URL || '/';
 
   return (
     <div className="fixed inset-0 z-[100] bg-ink text-canvas flex flex-col items-center justify-center p-6">
